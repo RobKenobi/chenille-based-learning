@@ -1,2 +1,2 @@
 # chenille-based-learning
-Welcome to the chenille-base learning project !
+Welcome to the chenille-based learning project !

@@ -96,8 +96,6 @@ def find_blue_ball(print_all=False):
     cv2.createTrackbar("Accuracy: Circles detection", "TrackBars", 15, 25, empty)
 
     prev_circle = None
-    dist = lambda x1, y1, x2, y2: (x1 - x2) ** 2 + (y1 - y2) ** 2
-
     while True:
         # Read the camera flow
         success, img = cap.read()
@@ -145,13 +143,13 @@ def find_blue_ball(print_all=False):
                 if closest_circle is None: closest_circle = circle
                 if prev_circle is not None:
 
-                    if np.linalg.norm(closest_circle[:2]-prev_circle[:2]) <= np.linalg.norm(circle[:2]-prev_circle[:2]):
+                    if np.linalg.norm(closest_circle[:2] - prev_circle[:2]) <= np.linalg.norm(
+                            circle[:2] - prev_circle[:2]):
                         closest_circle = circle
 
             x_closet, y_closet, r_closet = closest_circle
             cv2.circle(img_copy, (x_closet, y_closet), r_closet, (0, 0, 255), 6)
             cv2.circle(img_copy, (x_closet, y_closet), 2, (0, 255, 255), 3)
-            print(x_closet, y_closet, r_closet)
             """ 
             # Since we have reflection on the light on the ball it generate sometimes additional circles
             # we only want to keep track of the largest circles detected
@@ -170,6 +168,60 @@ def find_blue_ball(print_all=False):
                     cv2.circle(img_copy, (x, y), r, (0, 255, 0), 2)
                     # draw the center of the circle
                     cv2.circle(img_copy, (x, y), 2, (0, 255, 255), 3)
+
+        """ 
+        Change the reference frame at the center
+        """
+
+        height, width, _ = img_copy.shape
+
+        # Draw the cross at the center (overlay)
+        cross_width = 2
+        cv2.rectangle(img_copy, (0, int(height / 2) - cross_width), (width, int(height / 2) + cross_width), (255, 0, 0),
+                      -1)
+        cv2.rectangle(img_copy, (int(width / 2) - cross_width, 0), (int(width / 2) + cross_width, height), (255, 0, 0),
+                      -1)
+
+        # Change the ball position to a the reference frame
+        if prev_circle is not None:
+            x = prev_circle[0] - width / 2
+            y = height / 2 - prev_circle[1]
+            ball_pos = np.array([x, y])
+
+        tolerance = 0.3
+
+        t_x = tolerance * width / 2
+        t_y = tolerance * height / 2
+
+        # Check if the ball is left/center(ok)/right
+        if prev_circle is not None:
+            deviation = [0, 0]
+            center=True
+            if ball_pos[0] < -t_x:
+                cv2.putText(img_copy, 'Left', (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                            1, (0, 255, 0), thickness=3)
+                center=False
+            elif ball_pos[0] > t_x:
+                cv2.putText(img_copy, 'Right', (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                            1, (0, 255, 0), thickness=3)
+                center = False
+
+            if ball_pos[1] < -t_y:
+                cv2.putText(img_copy, 'Bottom', (50, 90), cv2.FONT_HERSHEY_SIMPLEX,
+                            1, (0, 255, 0), thickness=3)
+                center = False
+            elif ball_pos[1] > t_y:
+                cv2.putText(img_copy, 'Top', (50, 90), cv2.FONT_HERSHEY_SIMPLEX,
+                            1, (0, 255, 0), thickness=3)
+                center = False
+            if center:
+                cv2.putText(img_copy, 'Center !', (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                            1, (0, 255, 0), thickness=3)
+        # Check if the ball in the the center of the frame (overlays)
+
+        cv2.rectangle(img_copy, (int(width / 2 - t_x), int(height / 2 - t_y)),
+                      (int(width / 2 + t_x), int(height / 2 + t_y)), (0, 255, 0),
+                      2)
 
         frame_img = cv2.hconcat((img, img_copy))
         frame_mask = cv2.hconcat((mask, mask_blur))

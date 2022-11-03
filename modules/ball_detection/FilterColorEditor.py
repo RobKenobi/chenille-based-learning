@@ -44,13 +44,13 @@ class FilterColorEditor:
             pass
 
         cv2.namedWindow("TrackBars : Color filter")
-        cv2.resizeWindow("TrackBars", 640, 290)
-        cv2.createTrackbar("Hue Min", "TrackBars", self._hue_min, 179, empty)
-        cv2.createTrackbar("Hue Max", "TrackBars", self._hue_max, 179, empty)
-        cv2.createTrackbar("Sat Min", "TrackBars", self._sat_min, 255, empty)
-        cv2.createTrackbar("Sat Max", "TrackBars", self._sat_max, 255, empty)
-        cv2.createTrackbar("Val Min", "TrackBars", self._val_min, 255, empty)
-        cv2.createTrackbar("Val Max", "TrackBars", self._val_max, 255, empty)
+        cv2.resizeWindow("TrackBars : Color filter", 640, 290)
+        cv2.createTrackbar("Hue Min", "TrackBars : Color filter", self._hue_min, 179, empty)
+        cv2.createTrackbar("Hue Max", "TrackBars : Color filter", self._hue_max, 179, empty)
+        cv2.createTrackbar("Sat Min", "TrackBars : Color filter", self._sat_min, 255, empty)
+        cv2.createTrackbar("Sat Max", "TrackBars : Color filter", self._sat_max, 255, empty)
+        cv2.createTrackbar("Val Min", "TrackBars : Color filter", self._val_min, 255, empty)
+        cv2.createTrackbar("Val Max", "TrackBars : Color filter", self._val_max, 255, empty)
 
         while True:
 
@@ -60,12 +60,12 @@ class FilterColorEditor:
             img_hsv = cv2.cvtColor(img_copy, cv2.COLOR_BGR2HSV)
 
             # Get the position of the tracker
-            self._hue_min = cv2.getTrackbarPos("Hue Min", "TrackBars")
-            self._hue_max = cv2.getTrackbarPos("Hue Max", "TrackBars")
-            self._sat_min = cv2.getTrackbarPos("Sat Min", "TrackBars")
-            self._sat_max = cv2.getTrackbarPos("Sat Max", "TrackBars")
-            self._val_min = cv2.getTrackbarPos("Val Min", "TrackBars")
-            self._val_max = cv2.getTrackbarPos("Val Max", "TrackBars")
+            self._hue_min = cv2.getTrackbarPos("Hue Min", "TrackBars : Color filter")
+            self._hue_max = cv2.getTrackbarPos("Hue Max", "TrackBars : Color filter")
+            self._sat_min = cv2.getTrackbarPos("Sat Min", "TrackBars : Color filter")
+            self._sat_max = cv2.getTrackbarPos("Sat Max", "TrackBars : Color filter")
+            self._val_min = cv2.getTrackbarPos("Val Min", "TrackBars : Color filter")
+            self._val_max = cv2.getTrackbarPos("Val Max", "TrackBars : Color filter")
 
             # Update upper and lower attributes
             self._upper = np.array([self._hue_max, self._sat_max, self._val_max])
@@ -79,8 +79,7 @@ class FilterColorEditor:
 
             if cv2.waitKey(1) == ord("e"):
                 # Closing windows
-                cv2.destroyWindow("TrackBars : Color filter")
-                cv2.destroyWindow("Mask")
+                cv2.destroyAllWindows()
 
                 # Returning parameters
                 params = self.get_params()

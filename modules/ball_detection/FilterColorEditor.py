@@ -4,6 +4,7 @@ import numpy as np
 
 class FilterColorEditor:
     def __init__(self, video_feed=None, params=None):
+        # If no custom params are given, default ones are assigned
         if params is None:
             params = {"lower": np.array([103, 154, 77]), "upper": np.array([170, 255, 255])}
         self._lower = params["lower"]
@@ -42,7 +43,7 @@ class FilterColorEditor:
         def empty():
             pass
 
-        cv2.namedWindow("TrackBars")
+        cv2.namedWindow("TrackBars : Color filter")
         cv2.resizeWindow("TrackBars", 640, 290)
         cv2.createTrackbar("Hue Min", "TrackBars", self._hue_min, 179, empty)
         cv2.createTrackbar("Hue Max", "TrackBars", self._hue_max, 179, empty)
@@ -50,6 +51,7 @@ class FilterColorEditor:
         cv2.createTrackbar("Sat Max", "TrackBars", self._sat_max, 255, empty)
         cv2.createTrackbar("Val Min", "TrackBars", self._val_min, 255, empty)
         cv2.createTrackbar("Val Max", "TrackBars", self._val_max, 255, empty)
+
         while True:
 
             success, img = self._video_feed.read()
@@ -65,15 +67,21 @@ class FilterColorEditor:
             self._val_min = cv2.getTrackbarPos("Val Min", "TrackBars")
             self._val_max = cv2.getTrackbarPos("Val Max", "TrackBars")
 
+            # Update upper and lower attributes
             self._upper = np.array([self._hue_max, self._sat_max, self._val_max])
             self._lower = np.array([self._hue_min, self._sat_min, self._val_min])
 
+            # Generating image mask
             mask = cv2.inRange(img_hsv, self._lower, self._upper)
 
+            # Showing mask
             cv2.imshow("Mask", mask)
 
             if cv2.waitKey(1) == ord("e"):
-                params = self.get_params()
-                cv2.destroyWindow("TrackBars")
+                # Closing windows
+                cv2.destroyWindow("TrackBars : Color filter")
                 cv2.destroyWindow("Mask")
+
+                # Returning parameters
+                params = self.get_params()
                 return params

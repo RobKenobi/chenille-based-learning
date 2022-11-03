@@ -3,52 +3,40 @@ import numpy as np
 
 
 class BallDetector:
-    def __init__(self, image_input):
-        self._image_input = image_input
+    def __init__(self, color_filter_params=None, circle_detector_params=None, sigma_blur=5):
+        if color_filter_params is None:
+            color_filter_params = {"lower": np.array([103, 154, 77]), "upper": np.array([170, 255, 255])}
+        self._mask_lower = color_filter_params["lower"]
+        self._mask_upper = color_filter_params["upper"]
 
-    def create_mask(self, params):
-        self._upper = params["upper"]
-        self._lower = params["lower"]
+        if circle_detector_params is None:
+            circle_detector_params = {"minDist": 20, "param1": 50, "param2": 25, "minRadius": 0, "maxRadius": 0}
 
+        self._minDist = circle_detector_params["minDist"]
+        self._param1 = circle_detector_params["param1"]
+        self._param2 = circle_detector_params["param2"]
+        self._minRadius = circle_detector_params["minRadius"]
+        self._maxRadius = circle_detector_params["maxRadius"]
 
-    def open_filter_color_editor(self):
-        def empty():
-            pass
+        self.sigma_blur = sigma_blur
 
-        cv2.namedWindow("TrackBars")
-        cv2.resizeWindow("TrackBars", 640, 290)
-        cv2.createTrackbar("Hue Min", "TrackBars", 103, 179, empty)
-        cv2.createTrackbar("Hue Max", "TrackBars", 170, 179, empty)
-        cv2.createTrackbar("Sat Min", "TrackBars", 154, 255, empty)
-        cv2.createTrackbar("Sat Max", "TrackBars", 255, 255, empty)
-        cv2.createTrackbar("Val Min", "TrackBars", 77, 255, empty)
-        cv2.createTrackbar("Val Max", "TrackBars", 255, 255, empty)
-        cv2.createTrackbar("Param 1", "TrackBars", 50, 250, empty)
-        cv2.createTrackbar("Param 2", "TrackBars", 25, 250, empty)
+    def select_circle(self, circles):
+        # TODO implement a strategy to select a circle if many are detected
+        circle = None
+        success = None
+        return success, circle
 
-        while True:
-            success, img = self._image_input.read()
+    def detect_ball(self, image):
+        img_copy = image.copy()
+        img_hsv = cv2.cvtColor(img_copy, cv2.COLOR_BGR2HSV)
 
-            img_copy = img.copy()
-            img_hsv = cv2.cvtColor(img_copy, cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(img_hsv, self._mask_lower, self._mask_upper)
+        mask_blur = cv2.medianBlur(mask, 5)
 
-            # Get the position of the tracker
-            hue_min = cv2.getTrackbarPos("Hue Min", "TrackBars")
-            hue_max = cv2.getTrackbarPos("Hue Max", "TrackBars")
-            sat_min = cv2.getTrackbarPos("Sat Min", "TrackBars")
-            sat_max = cv2.getTrackbarPos("Sat Max", "TrackBars")
-            val_min = cv2.getTrackbarPos("Val Min", "TrackBars")
-            val_max = cv2.getTrackbarPos("Val Max", "TrackBars")
+        circles = cv2.HoughCircles(mask_blur, cv2.HOUGH_GRADIENT, 1, self._minDist,
+                                   param1=self._param1, param2=self._param2, minRadius=self._minRadius,
+                                   maxRadius=self._maxRadius)
 
-            lower = np.array([hue_min, sat_min, val_min])
-            upper = np.array([hue_max, sat_max, val_max])
+        success, target = self.select_circle(circles)
 
-            # Setting mask parameters
-            self.mask_params = {"lower": lower, "upper": upper}
-
-            # Creating mask 
-            self.mask = cv2.inRange(img_hsv, lower, upper)
-
-            # Press e to exit loop
-            if cv2.waitKey(1) == ord('e'):
-                break
+        return success, target

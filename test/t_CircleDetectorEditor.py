@@ -1,0 +1,1 @@
+from modules.ball_detection import CircleDetectorEditor

@@ -22,8 +22,12 @@ class BallDetector:
 
     def select_circle(self, circles):
         # TODO implement a strategy to select a circle if many are detected
-        circle = None
-        success = None
+        if circles is None:
+            circle = None
+            success = False
+        else:
+            circle = None
+            success = True
         return success, circle
 
     def detect_ball(self, image):

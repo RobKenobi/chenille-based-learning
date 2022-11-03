@@ -1,1 +1,3 @@
 from .FilterColorEditor import FilterColorEditor
+from .CircleDetectorEditor import CircleDetectorEditor
+from .BallDetector import BallDetector

@@ -55,7 +55,7 @@ class FilterColorEditor:
         while True:
 
             success, img = self._video_feed.read()
-
+            img = cv2.flip(img, 1)
             img_copy = img.copy()
             img_hsv = cv2.cvtColor(img_copy, cv2.COLOR_BGR2HSV)
 
@@ -80,6 +80,8 @@ class FilterColorEditor:
             if cv2.waitKey(1) == ord("e"):
                 # Closing windows
                 cv2.destroyAllWindows()
+                # Closing camera
+                self._video_feed.release()
 
                 # Returning parameters
                 params = self.get_params()

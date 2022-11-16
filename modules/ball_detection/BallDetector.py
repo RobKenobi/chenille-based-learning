@@ -5,12 +5,12 @@ import numpy as np
 class BallDetector:
     def __init__(self, color_filter_params=None, circle_detector_params=None, sigma_blur=5):
         if color_filter_params is None:
-            color_filter_params = {"lower": np.array([103, 154, 77]), "upper": np.array([170, 255, 255])}
+            color_filter_params = {"lower": np.array([55, 158, 77]), "upper": np.array([128, 255, 255])}
         self._mask_lower = color_filter_params["lower"]
         self._mask_upper = color_filter_params["upper"]
 
         if circle_detector_params is None:
-            circle_detector_params = {"minDist": 20, "param1": 50, "param2": 25, "minRadius": 0, "maxRadius": 0}
+            circle_detector_params = {"minDist": 250, "param1": 50, "param2": 11, "minRadius": 0, "maxRadius": 0}
 
         self._minDist = circle_detector_params["minDist"]
         self._param1 = circle_detector_params["param1"]

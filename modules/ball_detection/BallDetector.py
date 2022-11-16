@@ -20,14 +20,30 @@ class BallDetector:
 
         self.sigma_blur = sigma_blur
 
+        self._prev_circle = None
+
     def select_circle(self, circles):
-        # TODO implement a strategy to select a circle if many are detected
         if circles is None:
-            circle = None
-            success = False
-        else:
-            circle = None
-            success = True
+            return False, None
+
+        # Convert circles into a numpy array
+        circles = np.uint16(circles).reshape((circles.shape[1], circles.shape[2]))
+
+        if self._prev_circle is None:
+            self._prev_circle = circles[0]
+
+        # Compute the distances between the previous circles and the detected ones
+        distance = np.linalg.norm(circles[:, :2] - self._prev_circle[:2], axis=1)
+        sorted_index = np.argsort(distance)
+
+        # Sort the detected circles by their distance to the previous circle
+        sorted_circles = circles[sorted_index]
+
+        # Keep the first circle
+        circle = sorted_circles[0]
+
+        self._prev_circle = circle
+        success = True
         return success, circle
 
     def detect_ball(self, image):
@@ -42,5 +58,4 @@ class BallDetector:
                                    maxRadius=self._maxRadius)
 
         success, target = self.select_circle(circles)
-
         return success, target

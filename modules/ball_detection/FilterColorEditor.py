@@ -6,7 +6,7 @@ class FilterColorEditor:
     def __init__(self, video_feed=None, params=None):
         # If no custom params are given, default ones are assigned
         if params is None:
-            params = {"lower": np.array([103, 154, 77]), "upper": np.array([170, 255, 255])}
+            params = {"lower": np.array([55, 158, 77]), "upper": np.array([128, 255, 255])}
         self._lower = params["lower"]
         self._upper = params["upper"]
 
@@ -40,7 +40,10 @@ class FilterColorEditor:
         self.update_params()
 
     def open_editor(self):
-        def empty():
+        print("\n < COLOR EDITOR > \n")
+        print("Press <ESC> to exit")
+
+        def empty(x):
             pass
 
         cv2.namedWindow("TrackBars : Color filter")
@@ -77,7 +80,8 @@ class FilterColorEditor:
             # Showing mask
             cv2.imshow("Mask", mask)
 
-            if cv2.waitKey(1) == ord("e"):
+            # Press <ESC> to exit
+            if cv2.waitKey(1) == 27:
                 # Closing windows
                 cv2.destroyAllWindows()
                 # Closing camera

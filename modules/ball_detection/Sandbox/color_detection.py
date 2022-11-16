@@ -132,16 +132,18 @@ def find_blue_ball(print_all=False):
                                    param1=param1, param2=param2, minRadius=0, maxRadius=0)
 
         if circles is not None:
+
             detected_circles = np.uint16(circles).reshape((circles.shape[1], circles.shape[2]))
 
+            print(f"SHAPEEEEE : {detected_circles.shape}")
             # We want to filter all circles that was not close to the previous one
 
             closest_circle = None
 
             for circle in detected_circles:
-                if closest_circle is None: closest_circle = circle
+                if closest_circle is None:
+                    closest_circle = circle
                 if prev_circle is not None:
-
                     if np.linalg.norm(closest_circle[:2] - prev_circle[:2]) <= np.linalg.norm(
                             circle[:2] - prev_circle[:2]):
                         closest_circle = circle

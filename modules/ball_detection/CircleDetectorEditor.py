@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 # TODO test it
 
 class CircleDetectorEditor:
@@ -9,7 +10,7 @@ class CircleDetectorEditor:
         self._video_feed = cv2.VideoCapture(0) if video_feed is None else video_feed
 
         if circle_params is None:
-            circle_params = {"minDist": 20, "param1": 50, "param2": 25, "minRadius": 0, "maxRadius": 0}
+            circle_params = {"minDist": 250, "param1": 50, "param2": 11, "minRadius": 0, "maxRadius": 0}
 
         self._minDist = circle_params["minDist"]
         self._param1 = circle_params["param1"]
@@ -30,14 +31,16 @@ class CircleDetectorEditor:
                 "maxRadius": self._maxRadius}
 
     def open_editor(self):
+        print("\n < CIRCLE EDITOR > \n")
+        print("Press <ESC> to exit")
         def empty(x):
             pass
 
         cv2.namedWindow("TrackBars : Circle detection")
         cv2.resizeWindow("TrackBars : Circle detection", 640, 290)
         cv2.createTrackbar("minDist", "TrackBars : Circle detection", self._minDist, 250, empty)
-        cv2.createTrackbar("param1", "TrackBars : Circle detection", self._param1, 250, empty)
-        cv2.createTrackbar("param2", "TrackBars : Circle detection", self._param2, 250, empty)
+        cv2.createTrackbar("param1", "TrackBars : Circle detection", self._param1, 200, empty)
+        cv2.createTrackbar("param2", "TrackBars : Circle detection", self._param2, 100, empty)
         cv2.createTrackbar("minRadius", "TrackBars : Circle detection", self._minRadius, 250, empty)
         cv2.createTrackbar("maxRadius", "TrackBars : Circle detection", self._maxRadius, 250, empty)
 
@@ -45,6 +48,7 @@ class CircleDetectorEditor:
             success, img = self._video_feed.read()
 
             img_copy = img.copy()
+            img_copy = cv2.flip(img_copy, 1)
             img_hsv = cv2.cvtColor(img_copy, cv2.COLOR_BGR2HSV)
 
             mask = cv2.inRange(img_hsv, self._mask_lower, self._mask_upper)
@@ -65,20 +69,18 @@ class CircleDetectorEditor:
 
                 for (x, y, r) in detected_circles:
                     # draw the outer circles
-                    print(x, y, r)
                     cv2.circle(img_copy, (x, y), r, (0, 255, 0), 2)
                     # draw the center of the circle
                     cv2.circle(img_copy, (x, y), 2, (0, 255, 255), 3)
-            else:
-                print("No circle detected")
+
 
             cv2.imshow("Circle detector", img_copy)
 
-            # Press "e" to exit
-            if cv2.waitKey(1) == ord("e"):
+            # Press <ESC> to exit
+            if cv2.waitKey(1) == 27:
                 # Closing windows
                 cv2.destroyAllWindows()
-
+                self._video_feed.release()
                 # Returning parameters
                 params = self.get_params()
                 return params

@@ -33,14 +33,14 @@ time.sleep(0.1)
 while True:
     # If <ESC> is pressed
     if cv2.waitKey(1) == 27:
+        camera.close()
         break
 
     # Getting image
     camera.capture(rawCapture, format="bgr")
-    print(camera)
     image = rawCapture.array
-    print(image)
-    if image:
+
+    if image.shape[2]==3: # if an image is detected
         # Flipping image
         image = cv2.flip(image, 1)
 

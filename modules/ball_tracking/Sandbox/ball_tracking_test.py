@@ -1,4 +1,4 @@
-from modules.ball_tracking.Sandbox.BallTracker import BallTracker
+from modules.ball_tracking.BallTracker import BallTracker
 import numpy as np
 import cv2
 
@@ -17,7 +17,7 @@ CENTER = [350, 250, 20]
 pos = [TOP, TOP_LEFT, LEFT, BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT, RIGHT, TOP_RIGHT, CENTER]
 
 # Ball tracker
-tracker = BallTracker(height_reference=0.75)
+tracker = BallTracker(height_reference=0.5, tolerance=0.2)
 # Video feed
 cap = cv2.VideoCapture(0)
 
@@ -35,6 +35,10 @@ while True:
     # Press <p> to see the previous position
     elif key == ord("p"):
         i = (i - 1) % len(pos)
+    elif key == ord("g"):
+        pass
+    elif key != -1:
+        print("<n> : next point\n<p> : previous point\n<g> : random point")
     else:
         pass
 
@@ -49,6 +53,6 @@ while True:
             y = np.random.randint(image.shape[0])
             pos.insert(i, [x, y, 20])
 
-        print(tracker.display_position(image, pos[i]))
+        deviation = tracker.display_position(image, pos[i])
 
         cv2.imshow("Visu", image)

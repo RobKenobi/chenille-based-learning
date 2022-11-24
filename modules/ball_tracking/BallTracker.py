@@ -36,7 +36,7 @@ class BallTracker:
         ball_position = np.array([x, y])
         return ball_position
 
-    def display_position(self, image, circle):
+    def display_position(self, image, circle, show_text=True):
         # Retrieving image shape
         height, width, _ = image.shape
 
@@ -77,6 +77,7 @@ class BallTracker:
             message = "Center"
 
         # Show text with ball position
-        cv2.putText(image, message, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), thickness=3)
+        if show_text:
+            cv2.putText(image, message, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), thickness=3)
 
         return deviation

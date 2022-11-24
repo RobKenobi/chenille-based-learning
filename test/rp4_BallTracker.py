@@ -44,6 +44,7 @@ while True:
         print(image.shape)
         image = cv2.flip(image, 1)
         print(image.shape)
+        print("ok")
         # Trying to detect the ball
         success, target = detector.detect_ball(image)
 

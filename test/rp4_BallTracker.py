@@ -43,7 +43,7 @@ while True:
     if image.shape[2]==3: # if an image is detected
         # Flipping image
         image = cv2.flip(image, 1)
-
+        print(image.shape)
         # Trying to detect the ball
         success, target = detector.detect_ball(image)
 

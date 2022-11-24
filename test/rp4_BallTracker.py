@@ -39,8 +39,7 @@ while True:
     # Getting image
     camera.capture_continuous(rawCapture, format="bgr")
     image = rawCapture.array
-    print(image)
-    if image.shape[2]==3: # if an image is detected
+    if image is not None: # if an image is detected
         # Flipping image
         print(image.shape)
         image = cv2.flip(image, 1)

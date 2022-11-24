@@ -38,7 +38,7 @@ while True:
     # Getting image
     camera.capture(rawCapture, format="bgr")
     image = rawCapture.array
-
+    print(image)
     if image:
         # Flipping image
         image = cv2.flip(image, 1)

@@ -2,15 +2,13 @@ import cv2
 import numpy as np
 
 
-# TODO test it
-
 class CircleDetectorEditor:
     def __init__(self, video_feed=None, circle_params=None, mask_params=None, sigma_blur=5):
 
         self._video_feed = cv2.VideoCapture(0) if video_feed is None else video_feed
 
         if circle_params is None:
-            circle_params = {"minDist": 250, "param1": 50, "param2": 11, "minRadius": 0, "maxRadius": 0}
+            circle_params = {"minDist": 250, "param1": 50, "param2": 11, "minRadius": 10, "maxRadius": 115}
 
         self._minDist = circle_params["minDist"]
         self._param1 = circle_params["param1"]
@@ -33,6 +31,7 @@ class CircleDetectorEditor:
     def open_editor(self):
         print("\n < CIRCLE EDITOR > \n")
         print("Press <ESC> to exit")
+
         def empty(x):
             pass
 
@@ -72,7 +71,6 @@ class CircleDetectorEditor:
                     cv2.circle(img_copy, (x, y), r, (0, 255, 0), 2)
                     # draw the center of the circle
                     cv2.circle(img_copy, (x, y), 2, (0, 255, 255), 3)
-
 
             cv2.imshow("Circle detector", img_copy)
 

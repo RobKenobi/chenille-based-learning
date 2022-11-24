@@ -40,6 +40,9 @@ class BallTracker:
         # Retrieving image shape
         height, width, _ = image.shape
 
+        # Drawing the cross on the image
+        self.draw_cross(image)
+
         # Showing the ball
         x_closet, y_closet, r_closet = circle
         cv2.circle(image, (x_closet, y_closet), r_closet, (0, 0, 255), 6)
@@ -54,21 +57,21 @@ class BallTracker:
 
         message = ""
         if y_circle < -t_y:
-            message = "Bottom"
+            message = "bottom "
             # We compute the deviation with the origin of the frame
             deviation[1] = y_circle
         elif y_circle > t_y:
-            message = "Top"
+            message = "top "
             # We compute the deviation with the origin of the frame
             deviation[1] = y_circle
         else:
             pass
 
         if x_circle < -t_x:
-            message += " left "
+            message += "left "
             deviation[0] = x_circle
         elif x_circle > t_x:
-            message += " right "
+            message += "right "
             deviation[0] = x_circle
         else:
             pass
@@ -78,6 +81,6 @@ class BallTracker:
 
         # Show text with ball position
         if show_text:
-            cv2.putText(image, message, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), thickness=3)
+            cv2.putText(image, message.capitalize(), (20, 20), cv2.FONT_HERSHEY_COMPLEX, 0.75, (0, 255, 0), thickness=1)
 
         return deviation

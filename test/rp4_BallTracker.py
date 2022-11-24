@@ -30,16 +30,13 @@ rawCapture = PiRGBArray(camera)
 time.sleep(0.1)
 
 #cap = cv2.VideoCapture(0)
-while True:
+for foo in camera.capture(rawCapture, format="bgr"):
+    image = rawCapture.array
     # If <ESC> is pressed
     if cv2.waitKey(1) == 27:
         camera.close()
         break
 
-    # Getting image
-    camera.capture(rawCapture, format="bgr")
-    
-    image = rawCapture.array
     print(image)
     if image is not None: # if an image is detected
         # Flipping image
@@ -53,4 +50,6 @@ while True:
         if success:
             print(tracker.display_position(image, target))
 
-        cv2.imshow("Visu", image)
+    rawCapture.truncate()
+    rawCapture.seek(0)
+    cv2.imshow("Visu", image)

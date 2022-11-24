@@ -10,7 +10,7 @@ class BallDetector:
         self._mask_upper = color_filter_params["upper"]
 
         if circle_detector_params is None:
-            circle_detector_params = {"minDist": 250, "param1": 50, "param2": 11, "minRadius": 0, "maxRadius": 0}
+            circle_detector_params = {"minDist": 250, "param1": 50, "param2": 11, "minRadius": 10, "maxRadius": 115}
 
         self._minDist = circle_detector_params["minDist"]
         self._param1 = circle_detector_params["param1"]

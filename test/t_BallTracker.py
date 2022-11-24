@@ -48,6 +48,6 @@ while True:
         success, target = detector.detect_ball(image)
 
         if success:
-            tracker.display_position(image, target)
+            print(tracker.display_position(image, target))
 
         cv2.imshow("Visu", image)

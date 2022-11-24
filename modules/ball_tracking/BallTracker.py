@@ -36,17 +36,10 @@ class BallTracker:
         ball_position = np.array([x, y])
         return ball_position
 
-    def display_position(self, image, circle, show_text=True):
+    def get_deviation(self, image, circle):
         # Retrieving image shape
         height, width, _ = image.shape
 
-        # Drawing the cross on the image
-        self.draw_cross(image)
-
-        # Showing the ball
-        x_closet, y_closet, r_closet = circle
-        cv2.circle(image, (x_closet, y_closet), r_closet, (0, 0, 255), 6)
-        cv2.circle(image, (x_closet, y_closet), 2, (0, 255, 255), 3)
         # Computing the ball position in the reference frame
         x_circle, y_circle = self.change_frame(circle, width, height)
 
@@ -55,27 +48,35 @@ class BallTracker:
 
         deviation = np.array([0, 0])
 
+        if y_circle < -t_y or y_circle > t_y:
+            # We compute the deviation with the origin of the frame
+            deviation[1] = y_circle
+
+        if x_circle < -t_x or x_circle > t_x:
+            deviation[0] = x_circle
+
+        return deviation
+
+    def display_position(self, image, circle, show_text=True):
+        # Drawing the cross on the image
+        self.draw_cross(image)
+
+        # Showing the ball
+        x_closet, y_closet, r_closet = circle
+        cv2.circle(image, (x_closet, y_closet), r_closet, (0, 0, 255), 6)
+        cv2.circle(image, (x_closet, y_closet), 2, (0, 255, 255), 3)
+
+        deviation = self.get_deviation(image, circle)
+
         message = ""
-        if y_circle < -t_y:
-            message = "bottom "
-            # We compute the deviation with the origin of the frame
-            deviation[1] = y_circle
-        elif y_circle > t_y:
+        if deviation[1] > 0:
             message = "top "
-            # We compute the deviation with the origin of the frame
-            deviation[1] = y_circle
-        else:
-            pass
-
-        if x_circle < -t_x:
-            message += "left "
-            deviation[0] = x_circle
-        elif x_circle > t_x:
-            message += "right "
-            deviation[0] = x_circle
-        else:
-            pass
-
+        if deviation[1] < 0:
+            message = "bottom "
+        if deviation[0] > 0:
+            message += "right"
+        if deviation[0] < 0:
+            message += "left"
         if message == "":
             message = "Center"
 

@@ -37,7 +37,7 @@ while True:
         break
 
     # Getting image
-    camera.capture(rawCapture, format="bgr")
+    camera.capture_continuous(rawCapture, format="bgr")
     image = rawCapture.array
 
     if image.shape[2]==3: # if an image is detected

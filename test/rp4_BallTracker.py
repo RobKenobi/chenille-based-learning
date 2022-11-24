@@ -37,6 +37,7 @@ while True:
 
     # Getting image
     camera.capture(rawCapture, format="bgr")
+    print(camera)
     image = rawCapture.array
     print(image)
     if image:

@@ -37,8 +37,10 @@ while True:
         break
 
     # Getting image
-    camera.capture_continuous(rawCapture, format="bgr")
+    camera.capture(rawCapture, format="bgr")
+    
     image = rawCapture.array
+    print(image)
     if image is not None: # if an image is detected
         # Flipping image
         print(image.shape)
@@ -47,8 +49,8 @@ while True:
         print("ok")
         # Trying to detect the ball
         success, target = detector.detect_ball(image)
-
+        print(success)
         if success:
             print(tracker.display_position(image, target))
 
-        # cv2.imshow("Visu", image)
+        cv2.imshow("Visu", image)

@@ -11,6 +11,7 @@ from picamera import PiCamera
 import time
 import cv2
 
+
 # Ball Detection
 detector = BallDetector()
 
@@ -30,20 +31,16 @@ rawCapture = PiRGBArray(camera)
 time.sleep(0.1)
 
 #cap = cv2.VideoCapture(0)
-for foo in camera.capture(rawCapture, format="bgr"):
+for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True) :
     image = rawCapture.array
     # If <ESC> is pressed
     if cv2.waitKey(1) == 27:
         camera.close()
         break
-
-    print(image)
+    
     if image is not None: # if an image is detected
         # Flipping image
-        print(image.shape)
-        image = cv2.flip(image, 1)
-        print(image.shape)
-        print("ok")
+        image = cv2.flip(image, 2)
         # Trying to detect the ball
         success, target = detector.detect_ball(image)
         print(success)
@@ -52,4 +49,4 @@ for foo in camera.capture(rawCapture, format="bgr"):
 
     rawCapture.truncate()
     rawCapture.seek(0)
-    cv2.imshow("Visu", image)
+    #cv2.imshow("Visu", image)

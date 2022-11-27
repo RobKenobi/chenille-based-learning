@@ -9,8 +9,8 @@ void setup(){
 }
 
 void loop(){
-  Serial.println("Waiting for message...");
-  int message = Serial1.read();
-  Serial.println("Message received : " + String(message));
-  delay(1000);
+  if (Serial1.available()){
+    String message = Serial1.readString();
+    Serial.println("Message received : " + message);
+  }
 }

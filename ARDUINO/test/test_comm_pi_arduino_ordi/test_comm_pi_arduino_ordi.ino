@@ -8,9 +8,11 @@ void setup(){
   }
 }
 
+
 void loop(){
-  if (Serial1.available()){
-    String message = Serial1.readString();
-    Serial.println("Message received : " + message);
+  String message; // Defining the String variable which will store the received message
+  if(Serial1.available()){  // If data are avaible in the Serial buffer
+    message =  Serial1.readStringUntil('\n'); // Read the characters until you reach a line break
+    Serial.println("Message received : " + message); // Printing the received message
   }
 }

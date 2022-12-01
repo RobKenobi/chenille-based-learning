@@ -39,6 +39,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         break
     
     if image is not None: # if an image is detected
+        cv2.imwrite("test_image", image)
         # Flipping image
         image = cv2.flip(image, 2)
         # Trying to detect the ball

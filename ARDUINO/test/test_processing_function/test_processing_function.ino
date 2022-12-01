@@ -9,17 +9,25 @@ struct ErrorInput{
 ErrorInput processReceivedData(const String message){
   ErrorInput error;
   int sep = message.indexOf(";");
-  error.heading_error = message.substring(0,sep);
+  error.heading_error = message.substring(0,sep).toFloat();
+  error.distance_error = message.substring(sep + 1).toFloat();
 }
+
 
 void setup() {
   Serial.begin(115200); // Initialize communication with the computer
+  Serial1.begin(115200); // Initialize communication with the raspberry
 }
 
 String message;
 
 void loop() {
   if (Serial1.available()){
-      message = Serial.readStringUntil('\n');  // Read the data transmitted until the character RL is found
+      message = Serial1.readStringUntil('\n');  // Read the data transmitted until the character RL is found
+      message.trim();
+      Serial.println("Message" + message);
+      ErrorInput error = processReceivedData(message);
+      Serial.println("Received : " + String(error.heading_error) + " ; " + String(error.distance_error));
+  delay(1000);
   }
 }

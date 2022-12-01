@@ -33,6 +33,7 @@ time.sleep(0.1)
 #cap = cv2.VideoCapture(0)
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True) :
     image = rawCapture.array
+    cv2.imwrite("raw_image.png", image)
     # If <ESC> is pressed
     if cv2.waitKey(1) == 27:
         camera.close()
@@ -40,7 +41,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     
     if image is not None: # if an image is detected
         # Flipping image
-        image = cv2.flip(image, 2)
+        image = cv2.flip(image, -1)
         cv2.imwrite("test_image.png", image)
         # Trying to detect the ball
         success, target = detector.detect_ball(image)

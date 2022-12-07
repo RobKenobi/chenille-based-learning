@@ -24,22 +24,22 @@ def on_message(client, userdata, message):
 broker = "broker.hivemq.com"
 broker_port = 1883
 
-client = mqtt.Client("HiveMind")
+client = mqtt.Client("HiveMind", clean_session=False)
 
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect(broker, broker_port)
+client.connect(broker, broker_port, keepalive=60)
 
 client.loop_start()  # Start the loop
 
-while Connected != True: # Wait for the client to connect
+while Connected != True:  # Wait for the client to connect
     time.sleep(1)
 
 try:
     while True:
-        client.publish(f"Chenille-based-learning/number_of_active_robots", 1)
-        client.subscribe(f"publisher.connect/Chenille/Leader")
+        client.publish("Chenille-based-learning/HiveMind/number_of_chenille", 1)
+        client.subscribe("publisher.connect/#")
         time.sleep(1)
 
 except KeyboardInterrupt:

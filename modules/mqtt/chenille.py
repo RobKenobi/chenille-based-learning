@@ -17,11 +17,11 @@ broker = "broker.hivemq.com"
 broker_port = 1883
 
 name_robot = "Chenille"
-client = mqtt.Client(name_robot)
+client = mqtt.Client(name_robot, clean_session=True)
 
 client.on_connect = on_connect
 
-client.connect(broker, broker_port)
+client.connect(broker, broker_port, keepalive=10)
 
 client.loop_start()  # Start the loop
 

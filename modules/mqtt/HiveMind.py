@@ -15,6 +15,7 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, message):
+    print("oh")
     print("message received ", str(message.payload.decode("utf-8")))
     print("message topic=", message.topic)
     print("message qos=", message.qos)
@@ -36,10 +37,12 @@ client.loop_start()  # Start the loop
 while Connected != True:  # Wait for the client to connect
     time.sleep(1)
 
+client.subscribe("publisher.connect/#")
+
 try:
     while True:
         client.publish("Chenille-based-learning/HiveMind/number_of_chenille", 1)
-        client.subscribe("publisher.connect/#")
+
         time.sleep(1)
 
 except KeyboardInterrupt:

@@ -6,7 +6,7 @@ Connected = False
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
-        print("Connected to the HiveMq broker")
+        print("Connected to the broker")
         global Connected
         Connected = True
     else:
@@ -30,8 +30,7 @@ while Connected != True:  # Wait for the client to connect
 
 try:
     while True:
-        client.publish(f"Chenille-based-learning/number_of_active_robots", 1)
-        client.subscribe(f"publisher.connect/Chenille/Leader")
+        client.publish(f"Chenille-based-learning/{name_robot}/Leader", 1)
         time.sleep(1)
 
 except KeyboardInterrupt:

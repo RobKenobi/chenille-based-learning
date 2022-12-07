@@ -1,4 +1,3 @@
-#include<Arduino_NineAxesMotion.h>
 #include<Wire.h>
 #include<Servo.h>
 
@@ -10,15 +9,27 @@
 #define PIN_MOTOR_L 5
 #define PIN_MOTOR_R 6
 
+// Servo motor pin
+#define PIN_SERVO 3
+
 // Robot parameters
 // R --> Wheel radius (mm)
 // B --> Wheels distance (mm)
 #define R 34
 #define B 150
+// Maximum speed in rd/s (evaluated experimentally)
+#define MAX_SPEED 4.0
 
 // Gain controller
 #define GAIN_D 1
 #define GAIN_H 1
+
+
+/*
+###################
+  Global variables
+###################
+*/
 
 // Definition of the struct containing the motor commands
 struct MotorCommand{
@@ -32,13 +43,15 @@ struct ParsedInput{
   float distance_error; // Distance error computed by the raspberry
 };
 
-
 // Motor initialisation
-Servo motor_L, motor_R;
+Servo motorL, motorR, servo;
 
-// IMU definition
-NineAxesMotion motionSensor;
 
+/*
+############
+  Functions
+############
+*/
 
 ParsedInput processReceivedData(const String message){
   // This function allows us to process the message received with the Serial communication
@@ -51,17 +64,44 @@ ParsedInput processReceivedData(const String message){
 
 MotorCommand computeCommand(ParsedInput errors){
   MotorCommand command;
-  motorL = errors.distance_error * GAIN_D + errors.heading_error * B * GAIN_H / R; // rd/s
-  motorR = errors.distance_error * GAIN_D - errors.heading_error * B * GAIN_H / R; // rd/s
+  float motorL = errors.distance_error * GAIN_D + errors.heading_error * B * GAIN_H / R; // rd/s
+  float motorR = errors.distance_error * GAIN_D - errors.heading_error * B * GAIN_H / R; // rd/s
   
-  
+  // Making sure that the speed is between -MAX_SPEED and +MAX_SPEED
+  motorL = max(min(MAX_SPEED, motorL), -MAX_SPEED);
+  motorR = max(min(MAX_SPEED, motorR), -MAX_SPEED);
 
+  // Converting the speed on the PWM scale
+  motorL = PWM_MAX * motorL + PWM_MIN * (1 - motorL);
+  motorR = PWM_MAX * motorR + PWM_MIN * (1 - motorR);
+
+  command.motorL = (int)motorL;
+  command.motorR = (int)motorR;
+
+  return command;
 }
 
 
+/*
+############
+  Main code
+############
+*/
+
+
 void setup(){
-  Serial.begin(117200);
-  motionSensor.initSensor();
+  // Communication
+  Serial.begin(117200); // For communication with computer
+  Serial1.begin(117200); // For communication with Raspberry
+
+  // Motor initialization
+  motorL.attach(PIN_MOTOR_L, PWM_MIN, PWM_MAX);
+  motorR.attach(PIN_MOTOR_R, PWM_MIN, PWM_MAX);
+
+  // Camera servomotor initialization
+  servo.attach(PIN_SERVO);
+  servo.write(90); // Camera looking forward
+
 }
 
 void loop(){

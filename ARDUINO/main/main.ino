@@ -72,8 +72,8 @@ MotorCommand computeCommand(ParsedInput errors){
   motorR = max(min(MAX_SPEED, motorR), -MAX_SPEED);
 
   // Converting the speed on the PWM scale
-  motorL = PWM_MAX * motorL + PWM_MIN * (1 - motorL);
-  motorR = PWM_MAX * motorR + PWM_MIN * (1 - motorR);
+  motorL = PWM_MAX/MAX_SPEED * motorL + 1500;
+  motorR = PWM_MAX/MAX_SPEED * motorR + 1500;
 
   command.motorL = (int)motorL;
   command.motorR = (int)motorR;

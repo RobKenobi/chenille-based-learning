@@ -33,8 +33,8 @@
 
 // Definition of the struct containing the motor commands
 struct MotorCommand{
-  int motorL; // Command for left motor
-  int motorR; // Command for right motor
+  int motorL=1500; // Command for left motor
+  int motorR=1500; // Command for right motor
 };
 
 // Definition of the struct containing the information transmitted by the raspberry

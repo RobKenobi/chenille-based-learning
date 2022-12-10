@@ -66,15 +66,16 @@ MotorCommand computeCommand(ParsedInput errors){
   MotorCommand command;
   float motorL = errors.distance_error * GAIN_D + errors.heading_error * B * GAIN_H / R; // rd/s
   float motorR = errors.distance_error * GAIN_D - errors.heading_error * B * GAIN_H / R; // rd/s
-  
+  Serial.println(" 1 : motorL : " + (String)motorL + " motorR : " + (String)motorR);
+
   // Making sure that the speed is between -MAX_SPEED and +MAX_SPEED
   motorL = max(min(MAX_SPEED, motorL), -MAX_SPEED);
   motorR = max(min(MAX_SPEED, motorR), -MAX_SPEED);
-
+  Serial.println(" 2 : motorL : " + (String)motorL + " motorR : " + (String)motorR);
   // Converting the speed on the PWM scale
   motorL = 200/MAX_SPEED * motorL + 1500;
   motorR = 200/MAX_SPEED * motorR + 1500;
-
+  Serial.println(" 3 : motorL : " + (String)motorL + " motorR : " + (String)motorR);
   command.motorL = (int)motorL;
   command.motorR = (int)motorR;
 
@@ -108,12 +109,12 @@ void loop(){
   MotorCommand commands;
   if (Serial1.available()){
     String message = Serial1.readStringUntil('\n');
-    Serial.println("MESSAGE : " + message);
+    // Serial.println("MESSAGE : " + message);
     ParsedInput error = processReceivedData(message);
     commands = computeCommand(error);
   }
   motorL.writeMicroseconds(commands.motorL);
   motorR.writeMicroseconds(commands.motorR);
-  Serial.println("Command L : " + (String)commands.motorL + " Command R : " + (String)commands.motorR);
+  // Serial.println("Command L : " + (String)commands.motorL + " Command R : " + (String)commands.motorR);
   delay(1000);
 }

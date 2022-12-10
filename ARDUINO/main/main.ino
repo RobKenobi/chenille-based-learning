@@ -72,8 +72,8 @@ MotorCommand computeCommand(ParsedInput errors){
   motorR = max(min(MAX_SPEED, motorR), -MAX_SPEED);
 
   // Converting the speed on the PWM scale
-  motorL = PWM_MAX/MAX_SPEED * motorL + 1500;
-  motorR = PWM_MAX/MAX_SPEED * motorR + 1500;
+  motorL = 200/MAX_SPEED * motorL + 1500;
+  motorR = 200/MAX_SPEED * motorR + 1500;
 
   command.motorL = (int)motorL;
   command.motorR = (int)motorR;
@@ -108,7 +108,6 @@ void loop(){
   MotorCommand commands;
   if (Serial1.available()){
     String message = Serial1.readStringUntil('\n');
-    message.trim();
     Serial.println("MESSAGE : " + message);
     ParsedInput error = processReceivedData(message);
     commands = computeCommand(error);

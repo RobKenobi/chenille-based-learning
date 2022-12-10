@@ -105,16 +105,16 @@ void setup(){
 }
 
 void loop(){
+  MotorCommand commands;
   if (Serial1.available()){
     String message = Serial1.readStringUntil('\n');
     message.trim();
     Serial.println("MESSAGE : " + message);
     ParsedInput error = processReceivedData(message);
-    MotorCommand commands = computeCommand(error);
-
-    motorL.writeMicroseconds(commands.motorL);
-    motorR.writeMicroseconds(commands.motorR);
-    Serial.println("Command L : " + (String)commands.motorL + " Command R : " + (String)commands.motorR);
+    commands = computeCommand(error);
   }
+  motorL.writeMicroseconds(commands.motorL);
+  motorR.writeMicroseconds(commands.motorR);
+  Serial.println("Command L : " + (String)commands.motorL + " Command R : " + (String)commands.motorR);
   delay(1000);
 }

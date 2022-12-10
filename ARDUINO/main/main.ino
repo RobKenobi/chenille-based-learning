@@ -57,15 +57,15 @@ ParsedInput processReceivedData(const String message){
   // This function allows us to process the message received with the Serial communication
   ParsedInput data; // Struct which will contain the information extracted from the message
   int sep = message.indexOf(";"); // This the separator of the data in the message
-  data.heading_error = message.substring(0,sep).toFloat(); // Retrieving first information in the message
-  data.distance_error = message.substring(sep + 1).toFloat(); // Retrieving second information in the message
+  data.distance_error = message.substring(0,sep).toFloat(); // Retrieving first information in the message
+  data.heading_error = message.substring(sep + 1).toFloat(); // Retrieving second information in the message
   return data;
 }
 
 MotorCommand computeCommand(ParsedInput errors){
   MotorCommand command;
   float motorL = errors.distance_error * GAIN_D + errors.heading_error * B * GAIN_H / R; // rd/s
-  float motorR = errors.distance_error * GAIN_D - errors.heading_error * B * GAIN_H / R; // rd/s
+  float motorR = - errors.distance_error * GAIN_D + errors.heading_error * B * GAIN_H / R; // rd/s
   Serial.println(" 1 : motorL : " + (String)motorL + " motorR : " + (String)motorR);
 
   // Making sure that the speed is between -MAX_SPEED and +MAX_SPEED

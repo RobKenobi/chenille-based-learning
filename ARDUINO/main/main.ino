@@ -105,5 +105,13 @@ void setup(){
 }
 
 void loop(){
-  
+  if (Serial1.available()){
+    String message = Serial1.readStringUntil('\n');
+    message.trim();
+    ParsedInput error = processReceivedData(message);
+    MotorCommand commands = computeCommand(error);
+
+    motorL.writeMicroseconds(commands.motorL);
+    motorR.writeMicroseconds(commands.motorR);
+  }
 }

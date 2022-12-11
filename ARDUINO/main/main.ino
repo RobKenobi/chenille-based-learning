@@ -101,7 +101,6 @@ void setup(){
   // Camera servomotor initialization
   servo.attach(PIN_SERVO);
   servo.write(90); // Camera looking forward
-
 }
 
 void loop(){

@@ -10,5 +10,7 @@ serialArduino = serial.Serial('/dev/ttyUSB0', 115200)
 while True:
     # Sending data to the arduino
     # The data are 2 floats separated by ';'
-    value = serialArduino.write(b"0.9;12.3\n")
+    m = "0.5;0.0\n"
+    value = serialArduino.write(m.encode())
+    print("Send : ",m)
     sleep(1)

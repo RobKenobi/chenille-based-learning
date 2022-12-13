@@ -45,7 +45,6 @@ while True:
 
         if success:
             x_closet, y_closet, r_closet = target
-            print(r_closet)
             cv2.circle(image, (x_closet, y_closet), r_closet, (0, 0, 255), 6)
             cv2.circle(image, (x_closet, y_closet), 2, (0, 255, 255), 3)
 
@@ -56,11 +55,12 @@ while True:
                 target_radius = 70  # The robot should be approximately at 20 cm of the ball
 
                 # TODO : check the reduction factors
-                heading_error = deviation[1] / (320 * radius)
-                distance_error = (target_radius - radius) / 15
+                heading_error = deviation[1] / 80
+                distance_error = (target_radius - radius) / 20
                 servo = 0
 
                 message = f"{distance_error};{heading_error};{servo}"
+                print(message)
                 serialArduino.write(message.encode())
                 last_time = time.time()
 

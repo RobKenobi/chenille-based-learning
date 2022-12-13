@@ -2,6 +2,7 @@ import time
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 import json
+import random
 
 Connected = False
 
@@ -28,8 +29,8 @@ broker_port = 1883
 
 name_robot = "Chrysalide"
 client = mqtt.Client(name_robot, clean_session=True)
-# Callbacks
 
+# Callbacks
 client.on_connect = on_connect
 
 client.message_callback_add("Chenille-based-learning/HiveMind/population", update_population)
@@ -38,20 +39,23 @@ client.connect(broker, broker_port, keepalive=10)
 
 client.loop_start()  # Start the loop
 
-data = {"Name": name_robot, "Status": -1,
-        "Target": 2}  # -1: waiting for instructions from the server 0: follower 1:leader
-data_json = json.dumps(data)
-
 while Connected != True:  # Wait for the client to connect
     time.sleep(1)
 
 client.publish("Chenille-based-learning/HiveMind/population", i + 1, qos=2, retain=True)
 # client.will_set("Chenille-based-learning/HiveMind/population", i - 1, qos=2, retain=True)
+
+data = {"Name": name_robot}  # -1: waiting for instructions from the server 0: follower 1:leader
+
+client.publish(f"Chenille-based-learning/Swarm/{name_robot}/status", -1, qos=1)
 try:
     while True:
-        client.publish(f"Chenille-based-learning/Swarm/{name_robot}", data_json, qos=1)
-        # client.publish(f"Chenille-based-learning/Swarm/{name_robot}/status", -1, qos=1)
-        # client.publish(f"Chenille-based-learning/Swarm/{name_robot}/radius", 4, qos=1)
+        target = random.randint(3, 9)
+
+        # data["Target"] = target
+        data_json = json.dumps(data)
+        # client.publish(f"Chenille-based-learning/Swarm/{name_robot}", data_json, qos=1)
+        client.publish(f"Chenille-based-learning/Swarm/{name_robot}/Target", target, qos=1)
         time.sleep(1)
 
 except KeyboardInterrupt:

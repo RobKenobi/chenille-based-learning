@@ -5,10 +5,9 @@ import threading
 import numpy as np
 
 Connected = False
-leader = 0
-list_radius = np.array([])
+
 radius = np.zeros((2, 1))
-radius_dict = {}
+names = ["Chenille", "Chrysalide"]
 
 sem = threading.Semaphore()
 
@@ -19,35 +18,22 @@ def on_connect(client, userdata, flags, rc):
         global Connected
         Connected = True
         client.publish("Chenille-based-learning/HiveMind/population", 0, qos=2, retain=True)
-        client.publish("Chenille-based-learning/HiveMind/leader", leader, qos=1, retain=True)
     else:
         print("Connection failed")
 
 
 def on_message(client, userdata, message):
-    data = json.loads(message.payload)
-    print(data)
-    print(message.topic)
-    global radius_dict
-    # global radius
-    radius_dict[data["Name"]] = data["Target"]
-
-    # if data["Name"] == "Chenille":
-    #     radius[0] = data["Target"]
-    # if data["Name"] == "Chrysalide":
-    #     radius[1] = data["Target"]
-
-
-# print("message retain flag=", message.retain)
+    # data = json.loads(message.payload)
+    data = message.payload.decode()
+    topic_name = message.topic
+    if topic_name[30:-7] == "Chenille":
+        radius[0] = data
+    if topic_name[30:-7] == "Chrysalide":
+        radius[1] = data
 
 
 def check_population(client, userdata, message):
     print("Current population:", str(message.payload.decode()))
-
-
-# def get_radius(client, userdata, message):
-# global list_radius
-# list_radius = np.append(list_radius, float(message.payload.decode()))
 
 
 def on_disconnect(client, userdata, rc):
@@ -61,12 +47,9 @@ client = mqtt.Client("HiveMind", clean_session=False)
 
 client.on_connect = on_connect
 
-# client.message_callback_add()
 client.message_callback_add("Chenille-based-learning/HiveMind/population", check_population)
-client.message_callback_add("Chenille-based-learning/Swarm/#", on_message)
-# client.message_callback_add("Chenille-based-learning/Swarm/#", get_radius)
-# client.on_message = on_message
-# client.on_publish = on_publish
+client.message_callback_add("Chenille-based-learning/Swarm/+/Target", on_message)
+
 client.on_disconnect = on_disconnect
 
 client.connect(broker, broker_port, keepalive=60)
@@ -80,9 +63,22 @@ client.subscribe("Chenille-based-learning/Swarm/#")
 
 try:
     while True:
-        print(radius_dict)
+        followers = names.copy()
+        leader = followers[np.argmax(radius)]
+
+        followers.remove(leader)
+
+        if np.max(radius) != 0:
+            print("Le leader est ", leader)
+            client.publish(f"Chenille-based-learning/Swarm/{leader}/status", 1, qos=1)
+            for follower in followers:
+                client.publish(f"Chenille-based-learning/Swarm/{follower}/status", 0, qos=1)
+        # if leader == names[1]:  # If chrysalide is leader
+
         time.sleep(1)
 
 except KeyboardInterrupt:
+    for name in names:
+        client.publish(f"Chenille-based-learning/Swarm/{name}/status", -1, qos=1)
     client.disconnect()
     client.loop_stop()

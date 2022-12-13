@@ -28,8 +28,8 @@ broker_port = 1883
 
 name_robot = "Chenille"
 client = mqtt.Client(name_robot, clean_session=True)
-# Callbacks
 
+# Callbacks
 client.on_connect = on_connect
 
 client.message_callback_add("Chenille-based-learning/HiveMind/population", update_population)
@@ -50,7 +50,6 @@ client.publish("Chenille-based-learning/HiveMind/population", i + 1, qos=2, reta
 try:
     while True:
         client.publish(f"Chenille-based-learning/Swarm/{name_robot}", data_json, qos=1)
-
         # client.publish(f"Chenille-based-learning/Swarm/{name_robot}/status", -1, qos=1)
         # client.publish(f"Chenille-based-learning/Swarm/{name_robot}/radius", 4, qos=1)
         time.sleep(1)

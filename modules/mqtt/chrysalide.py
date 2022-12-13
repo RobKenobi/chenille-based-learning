@@ -50,6 +50,8 @@ client.publish("Chenille-based-learning/HiveMind/population", i + 1, qos=2, reta
 try:
     while True:
         client.publish(f"Chenille-based-learning/Swarm/{name_robot}", data_json, qos=1)
+        # client.publish(f"Chenille-based-learning/Swarm/{name_robot}/status", -1, qos=1)
+        # client.publish(f"Chenille-based-learning/Swarm/{name_robot}/radius", 4, qos=1)
         time.sleep(1)
 
 except KeyboardInterrupt:

@@ -7,7 +7,8 @@ import numpy as np
 Connected = False
 leader = 0
 list_radius = np.array([])
-list_chenille_names=[]
+radius = np.zeros((2, 1))
+radius_dict = {}
 
 sem = threading.Semaphore()
 
@@ -24,13 +25,20 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, message):
-    data=json.loads(message.payload)
+    data = json.loads(message.payload)
     print(data)
-    print(type(data))
-    print(data["Name"])
-    global list_chenille_names
-    list_chenille_names.append(data["Name"])
-    # print("message retain flag=", message.retain)
+    print(message.topic)
+    global radius_dict
+    # global radius
+    radius_dict[data["Name"]] = data["Target"]
+
+    # if data["Name"] == "Chenille":
+    #     radius[0] = data["Target"]
+    # if data["Name"] == "Chrysalide":
+    #     radius[1] = data["Target"]
+
+
+# print("message retain flag=", message.retain)
 
 
 def check_population(client, userdata, message):
@@ -38,8 +46,8 @@ def check_population(client, userdata, message):
 
 
 # def get_radius(client, userdata, message):
-    # global list_radius
-    # list_radius = np.append(list_radius, float(message.payload.decode()))
+# global list_radius
+# list_radius = np.append(list_radius, float(message.payload.decode()))
 
 
 def on_disconnect(client, userdata, rc):
@@ -72,7 +80,7 @@ client.subscribe("Chenille-based-learning/Swarm/#")
 
 try:
     while True:
-        list_chenille_names = []
+        print(radius_dict)
         time.sleep(1)
 
 except KeyboardInterrupt:

@@ -9,10 +9,12 @@ import cv2
 # Color Detection
 filter = FilterColorEditor()
 color_params = filter.open_editor()
+print("Color params : ", color_params)
 
 # Circle Detection
 circle_detector = CircleDetectorEditor(mask_params=color_params)
 circle_params = circle_detector.open_editor()
+print("Circle params : ", circle_params)
 
 # Ball Detection
 detector = BallDetector(color_filter_params=color_params, circle_detector_params=circle_params)

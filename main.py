@@ -40,7 +40,14 @@ try:
             print(success)
             if success:
                 deviation = tracker.get_deviation(image, target)
-                # TODO : convert deviation into an error and send it to the arduino
+                radius = target[-1]
+
+                # TODO : find the target radius
+                target_radius = 10
+
+                # TODO : find the reduction factor
+                heading_error = deviation[1]
+                distance_error = target_radius - radius
 
 
         rawCapture.truncate()

@@ -24,6 +24,8 @@ cap = cv2.VideoCapture(0)
 # Wait for the camera to be ready
 time.sleep(0.1)
 
+last_time = time.time()
+
 while True:
     # Press <ESC>
     if cv2.waitKey(1) == 27:
@@ -47,18 +49,21 @@ while True:
             cv2.circle(image, (x_closet, y_closet), r_closet, (0, 0, 255), 6)
             cv2.circle(image, (x_closet, y_closet), 2, (0, 255, 255), 3)
 
-            deviation = tracker.get_deviation(image, target)
-            radius = target[-1]
+            if time.time() - last_time > 1:
+                deviation = tracker.get_deviation(image, target)
+                radius = target[-1]
 
-            # TODO : find the target radius
-            target_radius = 10
+                target_radius = 70  # The robot should be approximately at 20 cm of the ball
 
-            # TODO : find the reduction factor
-            heading_error = deviation[1]
-            distance_error = target_radius - radius
+                # TODO : check the reduction factors
+                heading_error = deviation[1] / (320 * radius)
+                distance_error = (target_radius - radius) / 15
+                servo = 0
+
+                message = f"{distance_error};{heading_error};{servo}"
+                serialArduino.write(message.encode())
+                last_time = time.time()
 
             # TODO : send infos to MQTT server
-            # TODO :
-            # TODO : send the error to the arduino
 
     cv2.imshow("Image", image)

@@ -59,3 +59,5 @@ while True:
             # TODO : send infos to MQTT server
             # TODO :
             # TODO : send the error to the arduino
+
+    cv2.imshow("Image", image)

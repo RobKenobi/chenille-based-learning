@@ -96,7 +96,6 @@ MotorCommand computeCommand(ParsedInput errors){
 
 void setup(){
   // Communication
-  Serial.begin(117200); // For communication with computer
   Serial1.begin(117200); // For communication with Raspberry
 
   // Motor initialization

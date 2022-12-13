@@ -49,7 +49,9 @@ try:
                 heading_error = deviation[1]
                 distance_error = target_radius - radius
 
-
+                # TODO : send infos to MQTT server
+                # TODO : 
+                # TODO : send the error to the arduino
         rawCapture.truncate()
         rawCapture.seek(0)
 

@@ -29,6 +29,6 @@ void loop() {
       message.trim();
       ParsedInput error = processReceivedData(message);
       Serial.println("Received : " + String(error.heading_error) + " ; " + String(error.distance_error));
-  delay(1000);
   }
+  delay(1000);
 }

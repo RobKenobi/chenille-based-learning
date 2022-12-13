@@ -43,6 +43,7 @@ while True:
 
         if success:
             x_closet, y_closet, r_closet = target
+            print(r_closet)
             cv2.circle(image, (x_closet, y_closet), r_closet, (0, 0, 255), 6)
             cv2.circle(image, (x_closet, y_closet), 2, (0, 255, 255), 3)
 

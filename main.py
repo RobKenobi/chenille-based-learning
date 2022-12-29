@@ -56,7 +56,7 @@ while True:
 
                 # TODO : check the reduction factors
                 heading_error = - deviation[0] / 80
-                distance_error = (target_radius - radius) / 20  # (70-10)/20 = 3 rad/s is the maximum longitudinal speed
+                distance_error = (target_radius - radius) / 60  # (70-10)/60 = 1 rad/s is the maximum longitudinal speed
                 servo = 0
 
                 message = f"Distance error : {distance_error}\nHeading error : {heading_error}\nServo : {servo}"

@@ -49,7 +49,7 @@ while True:
             cv2.circle(image, (x_closet, y_closet), 2, (0, 255, 255), 3)
 
             if time.time() - last_time > 0.5:
-                deviation = tracker.get_deviation(image, target)
+                deviation = tracker.get_deviation(image, target,True)
                 radius = target[-1]
 
                 target_radius = 70  # The robot should be approximately at 20 cm of the ball

@@ -24,6 +24,9 @@
 #define GAIN_D 1
 #define GAIN_H 1
 
+// Baud rate
+#define BAUD 115200
+
 
 /*
 ###################
@@ -68,8 +71,8 @@ ParsedInput processReceivedData(const String message){
 
 MotorCommand computeCommand(ParsedInput errors){
   MotorCommand command;
-  float motorL = errors.distance_error * GAIN_D + errors.heading_error * B * GAIN_H / R; // rd/s
-  float motorR = - errors.distance_error * GAIN_D + errors.heading_error * B * GAIN_H / R; // rd/s
+  float motorL = errors.distance_error * GAIN_D - errors.heading_error * B * GAIN_H / R; // rd/s
+  float motorR = - errors.distance_error * GAIN_D - errors.heading_error * B * GAIN_H / R; // rd/s
 
   // Making sure that the speed is between -MAX_SPEED and +MAX_SPEED
   motorL = max(min(MAX_SPEED, motorL), -MAX_SPEED);
@@ -96,7 +99,7 @@ MotorCommand computeCommand(ParsedInput errors){
 
 void setup(){
   // Communication
-  Serial1.begin(117200); // For communication with Raspberry
+  Serial1.begin(BAUD); // For communication with Raspberry
 
   // Motor initialization
   motorL.attach(PIN_MOTOR_L, PWM_MIN, PWM_MAX);

@@ -21,13 +21,15 @@ class BallTracker:
         cv2.rectangle(image, (0, int(height * self._height_reference) - cross_width),
                       (width, int(height * self._height_reference) + cross_width), (255, 0, 0), -1)
 
-        cv2.rectangle(image, (int(width / 2) - cross_width, 0), (int(width / 2) + cross_width, height), (255, 0, 0), -1)
+        cv2.rectangle(image, (int(width / 2) - cross_width, 0),
+                      (int(width / 2) + cross_width, height), (255, 0, 0), -1)
 
         t_x = self._tolerance * width / 2
         t_y = self._tolerance * height / 2
 
         cv2.rectangle(image, (int(width / 2 - t_x), int(height * self._height_reference - t_y)),
-                      (int(width / 2 + t_x), int(height * self._height_reference + t_y)), (0, 255, 0),
+                      (int(width / 2 + t_x), int(height *
+                       self._height_reference + t_y)), (0, 255, 0),
                       2)
 
     def change_frame(self, circle, width, height):
@@ -36,12 +38,15 @@ class BallTracker:
         ball_position = np.array([x, y])
         return ball_position
 
-    def get_deviation(self, image, circle):
+    def get_deviation(self, image, circle, true_deviation=False):
         # Retrieving image shape
         height, width, _ = image.shape
 
         # Computing the ball position in the reference frame
         x_circle, y_circle = self.change_frame(circle, width, height)
+
+        if true_deviation:
+            return np.array([x_circle, y_circle])
 
         t_x = self._tolerance * width / 2
         t_y = self._tolerance * height / 2
@@ -82,6 +87,7 @@ class BallTracker:
 
         # Show text with ball position
         if show_text:
-            cv2.putText(image, message.capitalize(), (20, 20), cv2.FONT_HERSHEY_COMPLEX, 0.75, (0, 255, 0), thickness=1)
+            cv2.putText(image, message.capitalize(), (20, 20),
+                        cv2.FONT_HERSHEY_COMPLEX, 0.75, (0, 255, 0), thickness=1)
 
         return deviation

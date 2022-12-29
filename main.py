@@ -48,7 +48,7 @@ while True:
             cv2.circle(image, (x_closet, y_closet), r_closet, (0, 0, 255), 6)
             cv2.circle(image, (x_closet, y_closet), 2, (0, 255, 255), 3)
 
-            if time.time() - last_time > 1:
+            if time.time() - last_time > 0.5:
                 deviation = tracker.get_deviation(image, target)
                 radius = target[-1]
 

@@ -69,4 +69,4 @@ while True:
 
             # TODO : send infos to MQTT server
 
-    cv2.imshow("Image", image)
+        cv2.imshow("Image", image)

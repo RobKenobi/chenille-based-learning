@@ -63,7 +63,7 @@ while True:
                 print(10 * "---")
                 print(message)
 
-                message_to_send = f"{distance_error};{heading_error};{servo}"
+                message_to_send = f"{distance_error};{heading_error};{servo}\n"
                 serialArduino.write(message_to_send.encode())
                 last_time = time.time()
 

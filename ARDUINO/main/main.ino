@@ -22,7 +22,7 @@
 
 // Gain controller
 #define GAIN_D 1
-#define GAIN_H 1
+#define GAIN_H 0.05
 
 // Baud rate
 #define BAUD 115200

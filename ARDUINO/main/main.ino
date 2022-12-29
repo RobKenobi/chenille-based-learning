@@ -117,5 +117,5 @@ void loop(){
   motorL.writeMicroseconds(commands.motorL);
   motorR.writeMicroseconds(commands.motorR);
   servo.write(commands.servo);
-  delay(1000);
+  delay(500);
 }

@@ -61,7 +61,9 @@ try:
 
         client.publish(f"Chenille-based-learning/Robots/{name_robot}/BallRadius", target, qos=1)
 
-        print(status)
+        while status == -1:
+            time.sleep(1)
+
         if status == 1:
             print("I am the Leader")
         else:

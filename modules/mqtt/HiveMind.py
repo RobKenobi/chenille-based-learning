@@ -25,6 +25,8 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, message):
     # data = json.loads(message.payload)
     data = message.payload.decode()
+    # data.pop
+    # data.append
     topic_name = message.topic
     if topic_name[30:-7] == "Chenille":
         radius[0] = data
@@ -73,7 +75,6 @@ try:
             client.publish(f"Chenille-based-learning/Swarm/{leader}/status", 1, qos=1)
             for follower in followers:
                 client.publish(f"Chenille-based-learning/Swarm/{follower}/status", 0, qos=1)
-        # if leader == names[1]:  # If chrysalide is leader
 
         time.sleep(1)
 

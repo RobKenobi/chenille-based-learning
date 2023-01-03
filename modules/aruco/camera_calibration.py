@@ -20,6 +20,7 @@ objectPointsArray = []
 imgPointsArray = []
 
 cap = cv2.VideoCapture(0)
+time.sleep(1)
 
 nb_image = 10
 stop_good_image = nb_image  # number of chessboard detection
@@ -32,6 +33,7 @@ while True:
 
     # Load the image and convert it to gray scale
     ret, img = cap.read()
+    img = cv2.flip(img,-1)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # Find the chess board corners

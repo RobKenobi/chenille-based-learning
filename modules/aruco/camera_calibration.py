@@ -5,7 +5,7 @@ import numpy as np
 
 # Define the chess board rows and columns
 rows = 7  # TODO : Select the right number of rows
-cols = 10  # TODO : Select the right number of colums
+cols = 10  # TODO : Select the right number of columns
 square_size = 20  # TODO : Set the square size in mm
 
 # Set the termination criteria for the corner sub-pixel algorithm
@@ -20,7 +20,7 @@ objectPointsArray = []
 imgPointsArray = []
 
 cap = cv2.VideoCapture(0)
-time.sleep(1)
+# time.sleep(1)
 
 nb_image = 10
 stop_good_image = nb_image  # number of chessboard detection
@@ -32,8 +32,8 @@ while True:
     key = cv2.waitKey(1)
 
     # Load the image and convert it to gray scale
-    ret, img = cap.read()
-    img = cv2.flip(img,-1)
+    _, img = cap.read()
+    img = cv2.flip(img, -1)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # Find the chess board corners
@@ -58,11 +58,11 @@ while True:
     print("\rProgression : ", round((1 - stop_good_image / nb_image) * 100), " %", end='')
 
     # Display the image
-    cv2.imshow('chess board', cv2.flip(img, 1))
-    if key == ord('q') or stop_good_image == 0:
-        print("")
-        break
+    cv2.imshow('chess board', img)
 
+    if key == 27 or stop_good_image == 0:
+        print("\nFinished")
+        break
 
     # TODO : Check we have enough board pattern detection (like at least 50) before continue
     # Continue == stopping the loop

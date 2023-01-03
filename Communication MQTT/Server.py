@@ -1,7 +1,8 @@
-import time
-import paho.mqtt.client as mqtt
 import threading
+import time
+
 import numpy as np
+import paho.mqtt.client as mqtt
 
 Connected = False
 

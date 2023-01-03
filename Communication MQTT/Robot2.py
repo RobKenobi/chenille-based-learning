@@ -1,7 +1,7 @@
-import time
-import paho.mqtt.client as mqtt
-import paho.mqtt.publish as publish
 import random
+import time
+
+import paho.mqtt.client as mqtt
 
 Connected = False
 

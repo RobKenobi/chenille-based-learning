@@ -1,9 +1,10 @@
 import time
 
 import cv2
-# import serial
 
 from modules.aruco import ArucoDetector
+
+# import serial
 
 # Communication with Arduino
 # serialArduino = serial.Serial("/dev/ttyUSB0", 115200)
@@ -30,11 +31,11 @@ while True:
     ret, image = cap.read()
 
     if ret:
-        # Convert BRG image to GRAY image
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
         # Flipping image
         image = cv2.flip(image, -1)
+
+        # Convert BRG image to GRAY image
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         # Trying to detect the ball
         success, *_ = detector.detection(gray)

@@ -52,7 +52,7 @@ class ArucoDetector:
                                    cameraMatrix=self._mtx,
                                    distCoeffs=self._dist)
 
-        heading_error = np.degrees(np.tan(trans[0, 0] / trans[2, 0]))
+        heading_error = -np.degrees(np.tan(trans[0, 0] / trans[2, 0]))
         distance_error = trans[2, 0] - 20
 
         return heading_error, distance_error

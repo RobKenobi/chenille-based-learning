@@ -57,7 +57,7 @@ client.publish("Chenille-based-learning/HiveMind/population", i + 1, qos=2, reta
 
 # data = {"Name": name_robot}  # -1: waiting for instructions from the server 0: follower 1:leader
 
-client.publish(f"Chenille-based-learning/Swarm/{name_robot}/status", -1, qos=1)
+client.publish(f"Chenille-based-learning/Swarm/{name_robot}/status", status, qos=1)
 
 try:
     while True:

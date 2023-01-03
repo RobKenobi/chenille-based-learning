@@ -45,7 +45,7 @@ while Connected != True:  # Wait for the client to connect
 client.publish("Chenille-based-learning/HiveMind/population", i + 1, qos=2, retain=True)
 # client.will_set("Chenille-based-learning/HiveMind/population", i - 1, qos=2, retain=True)
 
-data = {"Name": name_robot}  # -1: waiting for instructions from the server 0: follower 1:leader
+# data = {"Name": name_robot}  # -1: waiting for instructions from the server 0: follower 1:leader
 
 client.publish(f"Chenille-based-learning/Swarm/{name_robot}/status", -1, qos=1)
 try:
@@ -53,7 +53,7 @@ try:
         target = random.randint(3, 9)
 
         # data["Target"] = target
-        data_json = json.dumps(data)
+        # data_json = json.dumps(data)
         # client.publish(f"Chenille-based-learning/Swarm/{name_robot}", data_json, qos=1)
         client.publish(f"Chenille-based-learning/Swarm/{name_robot}/Target", target, qos=1)
         time.sleep(1)

@@ -47,13 +47,12 @@ class ArucoDetector:
         return success, corners, ids
 
     def get_deviation(self):
-        _, rot, trans = cv2.solvePnP(objectPoints=self._aruco_marker_points,
-                                     imagePoints=self._corners,  # We take the first detected aruco
-                                     cameraMatrix=self._mtx,
-                                     distCoeffs=self._dist)
-        
-        rot_matrix, _ = cv2.Rodrigues(rot)
-        heading_error = np.degrees(np.arctan2(rot_matrix[1, 0], rot_matrix[0, 0])) - 90
+        _, _, trans = cv2.solvePnP(objectPoints=self._aruco_marker_points,
+                                   imagePoints=self._corners,  # We take the first detected aruco
+                                   cameraMatrix=self._mtx,
+                                   distCoeffs=self._dist)
+
+        heading_error = np.degrees(np.tan(trans[0, 0] / trans[2, 0]))
         distance_error = trans[2, 0] - 20
 
         return heading_error, distance_error

@@ -42,7 +42,7 @@ while True:
 
         if success and time.time() - last_time > 0.5:
             heading_error, distance_error = detector.get_deviation()
-            heading_error /= 20
+            heading_error /= 25
             distance_error /= 10
             servo = 0
 

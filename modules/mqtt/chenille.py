@@ -18,6 +18,7 @@ def update_population(client, userdata, message):
 
 def get_status(client, userdata, message):
     global status
+    print("ah")
     status = int(message.payload.decode())
 
 
@@ -27,6 +28,7 @@ def on_connect(client, userdata, flags, rc):
         global Connected
         Connected = True
         client.subscribe("Chenille-based-learning/HiveMind/population")
+        client.subscribe("Chenille-based-learning/Swarm/#")
     else:
         print("Connection failed")
 
@@ -41,7 +43,7 @@ client = mqtt.Client(name_robot, clean_session=True)
 client.on_connect = on_connect
 
 client.message_callback_add("Chenille-based-learning/HiveMind/population", update_population)
-client.message_callback_add(f"Chenille-based-learning/HiveMind/Swarm/{name_robot}/status", get_status)
+client.message_callback_add(f"Chenille-based-learning/Swarm/{name_robot}/status", get_status)
 
 client.connect(broker, broker_port, keepalive=10)
 

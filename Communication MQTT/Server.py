@@ -25,9 +25,9 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, message):
     data = message.payload.decode()
     topic_name = message.topic
-    if topic_name[31:-11] == "Robot1":
+    if topic_name.split('/')[2] == "Robot1":
         radius[0] = data
-    if topic_name[31:-11] == "Robot2":
+    if topic_name.split('/')[2] == "Robot2":
         radius[1] = data
 
 
@@ -65,7 +65,7 @@ try:
         followers = names.copy()
         leader = followers[np.argmax(radius)]
         followers.remove(leader)
-        print(radius)
+
         if np.max(radius) != 0:
 
             print("Le leader est ", leader)

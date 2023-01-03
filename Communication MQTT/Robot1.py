@@ -12,6 +12,7 @@ status = -1
 
 def update_population(client, userdata, message):
     global i
+    print("update pop ", i)
     i = int(message.payload.decode())
 
 

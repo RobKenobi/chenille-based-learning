@@ -28,9 +28,10 @@ def on_message(client, userdata, message):
     # data.pop
     # data.append
     topic_name = message.topic
-    if topic_name[30:-7] == "Robot1":
+    print(topic_name[31:-11])
+    if topic_name[31:-11] == "Robot1":
         radius[0] = data
-    if topic_name[30:-7] == "Robot2":
+    if topic_name[31:-11] == "Robot2":
         radius[1] = data
 
 
@@ -67,10 +68,10 @@ try:
     while True:
         followers = names.copy()
         leader = followers[np.argmax(radius)]
-
         followers.remove(leader)
-
+        print(radius)
         if np.max(radius) != 0:
+
             print("Le leader est ", leader)
 
             client.publish(f"Chenille-based-learning/Robots/{leader}/status", 1, qos=1, retain=True)

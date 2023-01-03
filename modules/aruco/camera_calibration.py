@@ -20,7 +20,7 @@ objectPointsArray = []
 imgPointsArray = []
 
 cap = cv2.VideoCapture(0)
-# time.sleep(1)
+time.sleep(1)
 
 nb_image = 10
 stop_good_image = nb_image  # number of chessboard detection

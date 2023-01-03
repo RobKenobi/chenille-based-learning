@@ -1,7 +1,6 @@
 import time
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
-import json
 import random
 
 Connected = False
@@ -52,19 +51,14 @@ while Connected != True:  # Wait for the client to connect
     time.sleep(1)
 
 client.publish("Chenille-based-learning/Server/population", i + 1, qos=2, retain=True)
-# client.will_set("Chenille-based-learning/HiveMind/population", i - 1, qos=2, retain=True)
-
-# data = {"Name": name_robot}  # -1: waiting for instructions from the server 0: follower 1:leader
+# -1: waiting for instructions from the server 0: follower 1:leader
 
 client.publish(f"Chenille-based-learning/Robots/{name_robot}/status", status, qos=1)
 
 try:
     while True:
-        target = random.randint(3, 9)  # Radius from ball
+        target = random.randint(3, 9)  # Radius of ball
 
-        # data["Target"] = target
-        # data_json = json.dumps(data)
-        # client.publish(f"Chenille-based-learning/Swarm/{name_robot}", data_json, qos=1)
         client.publish(f"Chenille-based-learning/Robots/{name_robot}/BallRadius", target, qos=1)
 
         print(status)

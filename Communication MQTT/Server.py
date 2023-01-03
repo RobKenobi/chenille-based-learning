@@ -1,6 +1,5 @@
 import time
 import paho.mqtt.client as mqtt
-import json
 import threading
 import numpy as np
 
@@ -23,12 +22,8 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, message):
-    # data = json.loads(message.payload)
     data = message.payload.decode()
-    # data.pop
-    # data.append
     topic_name = message.topic
-    print(topic_name[31:-11])
     if topic_name[31:-11] == "Robot1":
         radius[0] = data
     if topic_name[31:-11] == "Robot2":

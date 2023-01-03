@@ -13,7 +13,7 @@ serialArduino = serial.Serial("/dev/ttyUSB0", 115200)
 detector = BallDetector()
 
 # Parameters for the ball tracker
-tolerance = 0.3
+tolerance = 0.05
 height_reference = 0.5
 # Ball tracker
 tracker = BallTracker(height_reference=height_reference, tolerance=tolerance)
@@ -49,7 +49,7 @@ while True:
             cv2.circle(image, (x_closet, y_closet), 2, (0, 255, 255), 3)
 
             if time.time() - last_time > 0.5:
-                deviation = tracker.get_deviation(image, target,True)
+                deviation = tracker.get_deviation(image, target)
                 radius = target[-1]
 
                 target_radius = 70  # The robot should be approximately at 20 cm of the ball

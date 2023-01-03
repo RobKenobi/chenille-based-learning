@@ -1,3 +1,5 @@
+import time
+
 import cv2
 import numpy as np
 
@@ -19,7 +21,10 @@ imgPointsArray = []
 
 cap = cv2.VideoCapture(0)
 
-stop_good_image = 10 # number of chessboard detection
+nb_image = 10
+stop_good_image = nb_image  # number of chessboard detection
+
+start = time.time()
 
 # Loop over the image files
 while True:
@@ -37,8 +42,10 @@ while True:
         # Refine the corner position
         corners = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
 
-        if key == ord("k"):
+        if time.time() - start > 3:
             stop_good_image -= 1
+            start = time.time()
+
             # Add the object points and the image points to the arrays
             objectPointsArray.append(objectPoints)
             imgPointsArray.append(corners)
@@ -46,10 +53,14 @@ while True:
         # Draw the corners on the image
         cv2.drawChessboardCorners(img, (rows, cols), corners, ret)
 
+    print("\rProgression : ", round((1 - stop_good_image / nb_image) * 100), " %", end='')
+
     # Display the image
     cv2.imshow('chess board', cv2.flip(img, 1))
     if key == ord('q') or stop_good_image == 0:
+        print("")
         break
+
 
     # TODO : Check we have enough board pattern detection (like at least 50) before continue
     # Continue == stopping the loop

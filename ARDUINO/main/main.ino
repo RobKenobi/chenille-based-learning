@@ -21,8 +21,8 @@
 #define MAX_SPEED 4.0
 
 // Gain controller
-#define GAIN_D 1
-#define GAIN_H 0.05
+#define GAIN_D 1.5
+#define GAIN_H 0.1
 
 // Baud rate
 #define BAUD 115200

@@ -4,10 +4,10 @@ import cv2
 
 from modules.aruco import ArucoDetector
 
-# import serial
+import serial
 
 # Communication with Arduino
-# serialArduino = serial.Serial("/dev/ttyUSB0", 115200)
+serialArduino = serial.Serial("/dev/ttyUSB0", 115200)
 
 # Aruco Detection
 detector = ArucoDetector()
@@ -51,7 +51,7 @@ while True:
             print(message)
 
             message_to_send = f"{distance_error};{heading_error};{servo}\n"
-            # serialArduino.write(message_to_send.encode())
+            serialArduino.write(message_to_send.encode())
             last_time = time.time()
 
         cv2.imshow("Image", image)

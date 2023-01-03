@@ -16,24 +16,30 @@ class ArucoDetector:
                                               [-self._a / 2, -self._a / 2, 0]])
 
         try:
-            self._mtx = np.load("mtx.npy")
+            self._mtx = np.load(os.path.dirname(__file__) + "/mtx.npy")
         except FileNotFoundError:
             print("mtx.npy not found in ", os.path.dirname(__file__))
+            exit(1)
         try:
-            self._dist = np.load("dist.npy")
+            self._dist = np.load(os.path.dirname(__file__) + "/dist.npy")
         except FileNotFoundError:
             print("dist.npy not found in ", os.path.dirname(__file__))
+            exit(1)
 
         self._ids = None
         self._corners = None
 
     def detection(self, gray_image):
+        # Trying to detect an aruco marker
         corners, ids, rejectedImgPoints = aruco.detectMarkers(
-            gray, self._aruco_dict, parameters=self._parameters)
-        success = True if len(ids) else False
+            gray_image, self._aruco_dict, parameters=self._parameters)
+
+        success = True if ids else False
+
+        # Updating _ids and _corners attributes
         if success:
-            self._ids = ids
-            self._corners = corners
+            self._ids = ids[0]
+            self._corners = corners[0]
         else:
             self._ids = None
             self._corners = None
@@ -42,9 +48,15 @@ class ArucoDetector:
 
     def get_deviation(self):
         _, rot, trans = cv2.solvePnP(objectPoints=self._aruco_marker_points,
-                                     imagePoints=self._corners[0],  # We take the first detected aruco
+                                     imagePoints=self._corners,  # We take the first detected aruco
                                      cameraMatrix=self._mtx,
                                      distCoeffs=self._dist)
+        
+        rot_matrix, _ = cv2.Rodrigues(rot)
+        heading_error = np.degrees(np.arctan2(rot_matrix[1, 0], rot_matrix[0, 0])) - 90
+        distance_error = trans[2, 0] - 20
+
+        return heading_error, distance_error
 
 
 def find_euler(rot_matrix):

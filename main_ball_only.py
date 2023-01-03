@@ -67,6 +67,4 @@ while True:
                 serialArduino.write(message_to_send.encode())
                 last_time = time.time()
 
-            # TODO : send infos to MQTT server
-
         cv2.imshow("Image", image)

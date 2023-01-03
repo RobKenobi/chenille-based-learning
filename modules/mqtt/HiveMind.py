@@ -72,9 +72,10 @@ try:
 
         if np.max(radius) != 0:
             print("Le leader est ", leader)
-            client.publish(f"Chenille-based-learning/Swarm/{leader}/status", 1, qos=1)
+            print("bzzz")
+            client.publish(f"Chenille-based-learning/Swarm/{leader}/status", 1, qos=1, retain=True)
             for follower in followers:
-                client.publish(f"Chenille-based-learning/Swarm/{follower}/status", 0, qos=1)
+                client.publish(f"Chenille-based-learning/Swarm/{follower}/status", 0, qos=1, retain=True)
 
         time.sleep(1)
 

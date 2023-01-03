@@ -107,12 +107,87 @@ last_command_time = time.time()
 try:
     while True:
         #
+        k = cv2.waitKey(1)
+
+        # Press <ESC> to exit the program
+        if k == 27:
+            raise KeyboardInterrupt
+
+        # Reading image from camera
         _, image = cap.read()
 
-        # TODO  LOOK FOR BLUE BALL
+        if image is not None:
+            # Flipping image
+            image = cv2.flip(image, -1)
+
+            """
+                Looking for the ball
+            """
+            # Trying to detect the ball
+            success, target = ball_detector.detect_ball(image)
+
+            if not success:
+                # Skip all instructions and go back to the beginning of the loop
+                continue
+
+            # Publishing the radius of the ball
+            client.publish(f"Chenille-based-learning/Robots/{name_robot}/BallRadius", target[-1], qos=1)
+
+            if status == -1:
+                # Robot is not allowed to move
+                continue
+
+            if time.time() - last_command_time > 0.5:
+                # LEADER
+                if status == 1:
+                    deviation = tracker.get_deviation(image, target)
+                    radius = target[-1]
+
+                    target_radius = 70  # The robot should be approximately at 20 cm of the ball
+
+                    heading_error = - deviation[0]
+                    distance_error = (target_radius - radius) / 60
+                    servo = 0
+
+                # FOLLOWER
+                else:
+                    # Convert BRG image to GRAY image
+                    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+                    # Trying to detect the ball
+                    success, *_ = aruco_detector.detection(gray)
+
+                    if success:
+                        heading_error, distance_error = aruco_detector.get_deviation()
+                        heading_error /= 25
+                        distance_error /= 10
+                        servo = 0
+                    # If the aruco is not detected
+                    else:
+                        distance_error = 0
+                        heading_error = -0.5  # Turn right
+                        servo = 0
+
+                print(10 * "---")
+                print(f"Distance error : {distance_error}\nHeading error : {heading_error}\nServo : {servo}")
+
+                message_to_send = f"{distance_error};{heading_error};{servo}\n"
+                serialArduino.write(message_to_send.encode())
+                last_time = time.time()
+
+            cv2.imshow("Image", image)
+
+
 
 except KeyboardInterrupt:
+    # Closing communication
     print("Disconnecting from the broker ...")
     client.publish("Chenille-based-learning/Server/population", i - 1, qos=2, retain=True)
     client.disconnect()
     client.loop_stop()
+
+    # Releasing camera
+    cap.release()
+
+    # Closing all windows
+    cv2.destroyAllWindows()

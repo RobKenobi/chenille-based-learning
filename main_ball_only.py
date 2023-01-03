@@ -54,7 +54,6 @@ while True:
 
                 target_radius = 70  # The robot should be approximately at 20 cm of the ball
 
-                # TODO : check the reduction factors
                 heading_error = - deviation[0]
                 distance_error = (target_radius - radius) / 60  # (70-10)/60 = 1 rad/s is the maximum longitudinal speed
                 servo = 0

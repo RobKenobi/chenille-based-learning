@@ -94,11 +94,11 @@ client.connect(broker, broker_port, keepalive=10)
 
 client.loop_start()  # Start the loop
 
-
+print("on connect 2 : ", status)
 while Connected != True:  # Wait for the client to connect
     time.sleep(1)
-    
-print("on connect 2 : ", status)
+
+
 client.publish("Chenille-based-learning/Server/population", i + 1, qos=2, retain=True)
 # Status :
 # -1: waiting for instructions from the server 

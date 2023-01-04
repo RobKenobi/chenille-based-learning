@@ -129,6 +129,8 @@ try:
             if not success:
                 # Skip all instructions and go back to the beginning of the loop
                 continue
+            # TODO DEBUG
+            print(type(target[-1]), target[-1]) 
 
             # Publishing the radius of the ball
             client.publish(f"Chenille-based-learning/Robots/{name_robot}/BallRadius", target[-1], qos=1)

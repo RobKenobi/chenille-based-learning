@@ -30,9 +30,6 @@ def on_radius(client, userdata, message):
         radius[1] = data
 
 
-def on_disconnect(client, userdata, rc):
-    print("Disconnected to the broker")
-
 
 broker = "broker.hivemq.com"
 broker_port = 1883
@@ -43,7 +40,6 @@ client.on_connect = on_connect
 
 client.message_callback_add("Chenille-based-learning/Robots/+/BallRadius", on_radius)
 
-client.on_disconnect = on_disconnect
 
 client.connect(broker, broker_port, keepalive=60)
 
@@ -78,5 +74,6 @@ except KeyboardInterrupt:
     print("Arrêt de tous les robots")
     for name in names:
         client.publish(f"Chenille-based-learning/Robots/{name}/status", -1, qos=1)
+    print("Disconnecting from the server")
     client.disconnect()
     client.loop_stop()

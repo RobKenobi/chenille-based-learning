@@ -74,14 +74,12 @@ client = mqtt.Client(name_robot, clean_session=True)
 # Callbacks
 client.on_connect = on_connect
 
-
 client.connect(broker, broker_port, keepalive=10)
 
 client.loop_start()  # Start the loop
 
 while not Connected:  # Wait for the client to connect
     time.sleep(1)
-
 
 status = -1
 # Status :
@@ -91,7 +89,6 @@ status = -1
 
 client.publish(f"Chenille-based-learning/Robots/{name_robot}/status", status, qos=2)
 client.message_callback_add(f"Chenille-based-learning/Robots/{name_robot}/status", get_status)
-
 
 """
     MAIN LOOP
@@ -110,7 +107,7 @@ try:
 
         # Reading image from camera
         _, image = cap.read()
-        
+
         if image is not None:
             # Flipping image
             image = cv2.flip(image, -1)
@@ -120,12 +117,13 @@ try:
             """
             # Trying to detect the ball
             success_ball, target = ball_detector.detect_ball(image)
-            print("\nI see the ball\n")
 
             if not success_ball:
                 target = [0, 0, 0]
                 heading_error = 0
                 distance_error = 0
+            else:
+                print("\nI see the ball\n")
 
             # Publishing the radius of the ball
             client.publish(f"Chenille-based-learning/Robots/{name_robot}/BallRadius", int(target[-1]), qos=1)

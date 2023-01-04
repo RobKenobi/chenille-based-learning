@@ -100,6 +100,7 @@ MotorCommand computeCommand(ParsedInput errors){
 void setup(){
   // Communication
   Serial1.begin(BAUD); // For communication with Raspberry
+  Serial.begin(BAUD); // For communication with computer
 
   // Motor initialization
   motorL.attach(PIN_MOTOR_L, PWM_MIN, PWM_MAX);
@@ -110,12 +111,14 @@ void setup(){
   servo.write(90); // Camera looking forward
 }
 
-unsigned long last_command_send = millis();
 
 void loop(){
   MotorCommand commands;
   if (Serial1.available()){
     String message = Serial1.readStringUntil('\n');
+    
+    Serial.println(message);
+
     ParsedInput error = processReceivedData(message);
     commands = computeCommand(error);
   }

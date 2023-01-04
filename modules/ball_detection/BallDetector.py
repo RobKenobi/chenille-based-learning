@@ -33,8 +33,11 @@ class BallDetector:
             self._prev_circle = circles[0]
 
         # Compute the distances between the previous circles and the detected ones
-        distance = np.linalg.norm(circles[:, :2] - self._prev_circle[:2], axis=1)
-        sorted_index = np.argsort(distance)
+        # distance = np.linalg.norm(circles[:, :2] - self._prev_circle[:2], axis=1)
+        # sorted_index = np.argsort(distance)
+
+        # Sort with radius
+        sorted_index = np.argsort(circles[:, 2])
 
         # Sort the detected circles by their distance to the previous circle
         sorted_circles = circles[sorted_index]

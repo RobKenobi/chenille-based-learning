@@ -138,14 +138,15 @@ try:
             if time.time() - last_command_time > 0.5:
                 # LEADER
                 if status == 1:
+                    # Retrieving deviation and radius
                     deviation = ball_tracker.get_deviation(image, target)
                     radius = target[-1]
 
                     target_radius = 70  # The robot should be approximately at 20 cm of the ball
 
+                    # Computing error with reduction factors
                     heading_error = - deviation[0] / 200
                     distance_error = (target_radius - radius) / 60
-                    servo = 0
 
                 # FOLLOWER
                 else:
@@ -157,20 +158,20 @@ try:
 
                     if success:
                         print("I see the aruco")
+
+                        # Retrieving error with reduction factors
                         heading_error, distance_error = aruco_detector.get_deviation()
                         heading_error /= 25
                         distance_error /= 10
-                        servo = 0
+
                     # If the aruco is not detected
                     else:
                         print("I don't see the aruco")
                         distance_error = 0
                         heading_error = -0.5  # Turn right
-                        servo = 0
 
                 print(10 * "---")
-                print(
-                    f"Distance error : {round(distance_error, 2)}\nHeading error : {round(heading_error, 2)}\nServo : {servo}")
+                print(f"Distance error : {round(distance_error, 2)}\nHeading error  : {round(heading_error, 2)}\n")
 
                 message_to_send = f"{round(distance_error, 2)};{round(heading_error, 2)}\n"
                 serialArduino.write(message_to_send.encode())

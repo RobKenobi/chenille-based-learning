@@ -132,7 +132,7 @@ try:
                 # Robot is not allowed to move
                 print("Waiting for new status")
                 # cv2.imshow("Image", image)
-                time.sleep(0.1)
+                time.sleep(0.5)
                 continue
 
             if time.time() - last_command_time > 0.4:

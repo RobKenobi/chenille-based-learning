@@ -21,8 +21,8 @@
 #define MAX_SPEED 4.0
 
 // Gain controller
-#define GAIN_D 1.5
-#define GAIN_H 0.1
+#define GAIN_D 0.9
+#define GAIN_H 0.08
 
 // Baud rate
 #define BAUD 115200
@@ -111,6 +111,7 @@ void setup(){
   servo.write(90); // Camera looking forward
 }
 
+long unsigned timer;
 
 void loop(){
   MotorCommand commands;
@@ -124,10 +125,13 @@ void loop(){
     motorL.writeMicroseconds(commands.motorL);
     motorR.writeMicroseconds(commands.motorR);
     // servo.write(commands.servo);
+    timer = millis();
   }else{
+    if (millis()  - timer > 2000){ // Si aucune commande n'est envoyée pendant 2 secondes
     MotorCommand no_command;
     motorL.writeMicroseconds(no_command.motorL);
-    motorR.writeMicroseconds(no_commands.motorR);
+    motorR.writeMicroseconds(no_command.motorR);
     // servo.write(no_commands.servo);
+    }
   }
 }

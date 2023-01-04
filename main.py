@@ -48,16 +48,6 @@ time.sleep(0.1)
 
 Connected = False
 
-i = None
-
-status = -1
-print("Init status : ", status)
-
-def update_population(client, userdata, message):
-    global i
-    print("update pop ", i)
-    i = int(message.payload.decode())
-
 
 def get_status(client, userdata, message):
     global status
@@ -68,12 +58,9 @@ def get_status(client, userdata, message):
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
         print("Connected to the broker")
-        global Connected, status
+        global Connected
         Connected = True
-        print("on connect 1: ", status)
-        client.subscribe("Chenille-based-learning/Server/population")
         client.subscribe("Chenille-based-learning/Robots/#")
-
     else:
         print("Connection failed")
 
@@ -87,32 +74,30 @@ client = mqtt.Client(name_robot, clean_session=True)
 # Callbacks
 client.on_connect = on_connect
 
-client.message_callback_add("Chenille-based-learning/Server/population", update_population)
-client.message_callback_add(f"Chenille-based-learning/Robots/{name_robot}/status", get_status)
 
 client.connect(broker, broker_port, keepalive=10)
 
 client.loop_start()  # Start the loop
 
-print("on connect 2 : ", status)
 while Connected != True:  # Wait for the client to connect
     time.sleep(1)
 
 
-client.publish("Chenille-based-learning/Server/population", i + 1, qos=2, retain=True)
+status = -1
 # Status :
 # -1: waiting for instructions from the server 
 # 0: follower 
 # 1:leader
 
-print("Status before publish : ", status)
 client.publish(f"Chenille-based-learning/Robots/{name_robot}/status", status, qos=2)
+client.message_callback_add(f"Chenille-based-learning/Robots/{name_robot}/status", get_status)
+
 
 """
     MAIN LOOP
 """
 last_command_time = time.time()
-
+print("before loop : ", status)
 try:
     while True:
         #
@@ -124,7 +109,7 @@ try:
 
         # Reading image from camera
         _, image = cap.read()
-
+        
         if image is not None:
             # Flipping image
             image = cv2.flip(image, -1)
@@ -136,17 +121,17 @@ try:
             success, target = ball_detector.detect_ball(image)
 
             if not success:
+                cv2.imshow("Image", image)
                 # Skip all instructions and go back to the beginning of the loop
                 continue
-            # TODO DEBUG
-            print(type(target[-1]), target[-1]) 
 
             # Publishing the radius of the ball
-            client.publish(f"Chenille-based-learning/Robots/{name_robot}/BallRadius", target[-1], qos=1)
+            client.publish(f"Chenille-based-learning/Robots/{name_robot}/BallRadius", int(target[-1]), qos=1)
 
             if status == -1:
                 # Robot is not allowed to move
                 print("Waiting for new status")
+                cv2.imshow("Image", image)
                 continue
 
             if time.time() - last_command_time > 0.5:
@@ -194,7 +179,6 @@ try:
 except KeyboardInterrupt:
     # Closing communication
     print("Disconnecting from the broker ...")
-    client.publish("Chenille-based-learning/Server/population", i - 1, qos=2, retain=True)
     client.disconnect()
     client.loop_stop()
 

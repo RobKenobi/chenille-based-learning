@@ -170,9 +170,9 @@ try:
 
                 print(10 * "---")
                 print(
-                    f"Distance error : {round(distance_error, 3)}\nHeading error : {round(heading_error, 3)}\nServo : {servo}")
+                    f"Distance error : {round(distance_error, 2)}\nHeading error : {round(heading_error, 2)}\nServo : {servo}")
 
-                message_to_send = f"{round(distance_error, 3)};{round(heading_error, 3)};{servo}\n"
+                message_to_send = f"{round(distance_error, 2)};{round(heading_error, 2)}\n"
                 serialArduino.write(message_to_send.encode())
                 last_time = time.time()
 

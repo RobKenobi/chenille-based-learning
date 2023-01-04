@@ -30,7 +30,7 @@ tolerance = 0.05
 height_reference = 0.5
 
 # Ball tracker
-tracker = BallTracker(height_reference=height_reference, tolerance=tolerance)
+ball_tracker = BallTracker(height_reference=height_reference, tolerance=tolerance)
 
 """
     CAMERA INITIALIZATION
@@ -51,7 +51,7 @@ Connected = False
 
 def get_status(client, userdata, message):
     global status
-    print("Get status : ", status)
+    # print("Get status : ", status)
     status = int(message.payload.decode())
 
 
@@ -79,7 +79,7 @@ client.connect(broker, broker_port, keepalive=10)
 
 client.loop_start()  # Start the loop
 
-while Connected != True:  # Wait for the client to connect
+while not Connected:  # Wait for the client to connect
     time.sleep(1)
 
 
@@ -96,8 +96,9 @@ client.message_callback_add(f"Chenille-based-learning/Robots/{name_robot}/status
 """
     MAIN LOOP
 """
+
 last_command_time = time.time()
-print("before loop : ", status)
+
 try:
     while True:
         #
@@ -118,9 +119,9 @@ try:
                 Looking for the ball
             """
             # Trying to detect the ball
-            success, target = ball_detector.detect_ball(image)
+            success_ball, target = ball_detector.detect_ball(image)
 
-            if not success:
+            if not success_ball:
                 target = [0, 0, 0]
 
             # Publishing the radius of the ball
@@ -132,10 +133,10 @@ try:
                 # cv2.imshow("Image", image)
                 continue
 
-            if time.time() - last_command_time > 0.5:
+            if time.time() - last_command_time > 0.4:
                 # LEADER
                 if status == 1:
-                    deviation = tracker.get_deviation(image, target)
+                    deviation = ball_tracker.get_deviation(image, target)
                     radius = target[-1]
 
                     target_radius = 70  # The robot should be approximately at 20 cm of the ball

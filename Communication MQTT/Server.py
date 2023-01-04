@@ -21,7 +21,7 @@ def on_connect(client, userdata, flags, rc):
         print("Connection failed")
 
 
-def on_message(client, userdata, message):
+def on_radius(client, userdata, message):
     data = message.payload.decode()
     topic_name = message.topic
     if topic_name.split('/')[2] == "Robot1":
@@ -41,7 +41,7 @@ client = mqtt.Client("Server", clean_session=False)
 
 client.on_connect = on_connect
 
-client.message_callback_add("Chenille-based-learning/Robots/+/BallRadius", on_message)
+client.message_callback_add("Chenille-based-learning/Robots/+/BallRadius", on_radius)
 
 client.on_disconnect = on_disconnect
 

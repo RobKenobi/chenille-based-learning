@@ -95,7 +95,10 @@ while Connected != True:  # Wait for the client to connect
     time.sleep(1)
 
 client.publish("Chenille-based-learning/Server/population", i + 1, qos=2, retain=True)
-# -1: waiting for instructions from the server 0: follower 1:leader
+# Status :
+# -1: waiting for instructions from the server 
+# 0: follower 
+# 1:leader
 
 client.publish(f"Chenille-based-learning/Robots/{name_robot}/status", status, qos=1)
 
@@ -137,6 +140,7 @@ try:
 
             if status == -1:
                 # Robot is not allowed to move
+                print("Waiting for new status")
                 continue
 
             if time.time() - last_command_time > 0.5:

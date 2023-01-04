@@ -143,7 +143,7 @@ try:
                     target_radius = 70  # The robot should be approximately at 20 cm of the ball
 
                     # Computing error with reduction factors
-                    heading_error = - deviation[0] / 200
+                    heading_error = - deviation[0] / 175
                     distance_error = (target_radius - radius) / 70
 
                 # FOLLOWER

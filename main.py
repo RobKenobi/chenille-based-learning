@@ -143,6 +143,7 @@ try:
                     target_radius = 70  # The robot should be approximately at 20 cm of the ball
 
                     # Computing error with reduction factors
+                    print("Deviation : ", deviation[0])
                     heading_error = - deviation[0] / 300
                     distance_error = (target_radius - radius) / 100
 

@@ -120,10 +120,8 @@ void loop(){
     commands = computeCommand(error);
   }
   
-  if (millis() - last_command_send >= 500){
   motorL.writeMicroseconds(commands.motorL);
   motorR.writeMicroseconds(commands.motorR);
   servo.write(commands.servo);
-  last_command_send = millis();
-  }
+  delay(500);
 }

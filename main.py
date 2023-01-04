@@ -120,9 +120,12 @@ try:
             """
             # Trying to detect the ball
             success_ball, target = ball_detector.detect_ball(image)
+            print("\nI see the ball\n")
 
             if not success_ball:
                 target = [0, 0, 0]
+                heading_error = 0
+                distance_error = 0
 
             # Publishing the radius of the ball
             client.publish(f"Chenille-based-learning/Robots/{name_robot}/BallRadius", int(target[-1]), qos=1)

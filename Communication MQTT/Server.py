@@ -54,23 +54,28 @@ while not Connected:  # Wait for the client to connect
 
 client.subscribe("Chenille-based-learning/Robots/#")
 
+last_publish = time.time()
 try:
     while True:
         followers = names.copy()
         leader = followers[np.argmax(radius)]
         followers.remove(leader)
 
-        if np.max(radius) != 0:
+        if time.time() - last_publish > 0.5:
+            if np.max(radius) != 0:
+                print("Le leader est ", leader)
+                client.publish(f"Chenille-based-learning/Robots/{leader}/status", 1, qos=1, retain=True)
 
-            print("Le leader est ", leader)
-
-            client.publish(f"Chenille-based-learning/Robots/{leader}/status", 1, qos=1, retain=True)
-            for follower in followers:
-                client.publish(f"Chenille-based-learning/Robots/{follower}/status", 0, qos=1, retain=True)
-
-        time.sleep(1)
+                for follower in followers:
+                    client.publish(f"Chenille-based-learning/Robots/{follower}/status", 0, qos=1, retain=True)
+            else:
+                print("Aucun robot ne voit la balle")
+                for robot in names:
+                    client.publish(f"Chenille-based-learning/Robots/{robot}/status", -1, qos=1, retain=True)
+            last_publish = time.time()
 
 except KeyboardInterrupt:
+    print("Arrêt de tous les robots")
     for name in names:
         client.publish(f"Chenille-based-learning/Robots/{name}/status", -1, qos=1)
     client.disconnect()

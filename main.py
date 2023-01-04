@@ -121,9 +121,7 @@ try:
             success, target = ball_detector.detect_ball(image)
 
             if not success:
-                cv2.imshow("Image", image)
-                # Skip all instructions and go back to the beginning of the loop
-                continue
+                target = [0, 0, 0]
 
             # Publishing the radius of the ball
             client.publish(f"Chenille-based-learning/Robots/{name_robot}/BallRadius", int(target[-1]), qos=1)
@@ -142,7 +140,7 @@ try:
 
                     target_radius = 70  # The robot should be approximately at 20 cm of the ball
 
-                    heading_error = - deviation[0]
+                    heading_error = - deviation[0] / 200
                     distance_error = (target_radius - radius) / 60
                     servo = 0
 

@@ -144,8 +144,8 @@ try:
 
                     # Computing error with reduction factors
                     print("Deviation : ", deviation, " Image shape : ", image.shape)
-                    heading_error = - deviation[0] / 300
-                    distance_error = (target_radius - radius) / 100
+                    heading_error = - deviation[0] / 200
+                    distance_error = (target_radius - radius) / 70
 
                 # FOLLOWER
                 else:

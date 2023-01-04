@@ -51,7 +51,7 @@ Connected = False
 i = None
 
 status = -1
-
+print("Init status : ", status)
 
 def update_population(client, userdata, message):
     global i
@@ -61,6 +61,7 @@ def update_population(client, userdata, message):
 
 def get_status(client, userdata, message):
     global status
+    print("Get status : ", status)
     status = int(message.payload.decode())
 
 

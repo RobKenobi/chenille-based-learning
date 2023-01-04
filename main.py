@@ -135,7 +135,7 @@ try:
                 time.sleep(0.5)
                 continue
 
-            if time.time() - last_command_time > 0.4:
+            if time.time() - last_command_time > 0.5:
                 # LEADER
                 if status == 1:
                     deviation = ball_tracker.get_deviation(image, target)

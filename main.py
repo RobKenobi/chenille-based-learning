@@ -129,7 +129,7 @@ try:
             if status == -1:
                 # Robot is not allowed to move
                 print("Waiting for new status")
-                cv2.imshow("Image", image)
+                # cv2.imshow("Image", image)
                 continue
 
             if time.time() - last_command_time > 0.5:
@@ -170,7 +170,7 @@ try:
                 serialArduino.write(message_to_send.encode())
                 last_time = time.time()
 
-            cv2.imshow("Image", image)
+            # cv2.imshow("Image", image)
 
 
 

@@ -38,18 +38,16 @@
 struct MotorCommand{
   int motorL=1500; // Command for left motor
   int motorR=1500; // Command for right motor
-  int servo=90;
 };
 
 // Definition of the struct containing the information transmitted by the raspberry
 struct ParsedInput{
   float heading_error;  // Heading error computed by the raspberry
   float distance_error; // Distance error computed by the raspberry
-  int servo_angle;    // Servo angle to set
 };
 
 // Motor initialisation
-Servo motorL, motorR, servo;
+Servo motorL, motorR;
 
 
 /*
@@ -61,11 +59,9 @@ Servo motorL, motorR, servo;
 ParsedInput processReceivedData(const String message){
   // This function allows us to process the message received with the Serial communication
   ParsedInput data; // Struct which will contain the information extracted from the message
-  int sep1 = message.indexOf(";"); // This the separator of the data in the message
-  // int sep2 = message.lastIndexOf(";");
-  data.distance_error = message.substring(0,sep1).toFloat(); // Retrieving first information in the message
-  data.heading_error = message.substring(sep1 + 1).toFloat(); // Retrieving second information in the message
-  // data.servo_angle = message.substring(sep2+1).toInt();
+  int sep = message.indexOf(";"); // This the separator of the data in the message
+  data.distance_error = message.substring(0,sep).toFloat(); // Retrieving first information in the message
+  data.heading_error = message.substring(sep + 1).toFloat(); // Retrieving second information in the message
   return data;
 }
 
@@ -84,7 +80,6 @@ MotorCommand computeCommand(ParsedInput errors){
 
   command.motorL = (int)motorL;
   command.motorR = (int)motorR;
-  // command.servo = errors.servo_angle + 90;
 
   return command;
 }
@@ -100,15 +95,16 @@ MotorCommand computeCommand(ParsedInput errors){
 void setup(){
   // Communication
   Serial1.begin(BAUD); // For communication with Raspberry
-  Serial.begin(BAUD); // For communication with computer
 
   // Motor initialization
   motorL.attach(PIN_MOTOR_L, PWM_MIN, PWM_MAX);
   motorR.attach(PIN_MOTOR_R, PWM_MIN, PWM_MAX);
 
   // Camera servomotor initialization
+  Servo servo;
   servo.attach(PIN_SERVO);
   servo.write(90); // Camera looking forward
+  servo.detach();
 }
 
 long unsigned timer;
@@ -116,22 +112,25 @@ long unsigned timer;
 void loop(){
   MotorCommand commands;
   if (Serial1.available()){
-    String message = Serial1.readStringUntil('\n');
-    
-    Serial.println(message);
+    String message = Serial1.readStringUntil('\n'); // Receiving message
+    ParsedInput error = processReceivedData(message); // Parsing message
+    commands = computeCommand(error); // Computing commands
 
-    ParsedInput error = processReceivedData(message);
-    commands = computeCommand(error);
+    // Sending commands to the motors
     motorL.writeMicroseconds(commands.motorL);
     motorR.writeMicroseconds(commands.motorR);
-    // servo.write(commands.servo);
+
+    // Reset timer
     timer = millis();
+
   }else{
-    if (millis()  - timer > 2000){ // Si aucune commande n'est envoyée pendant 2 secondes
+    // No message received
+    if (millis()  - timer > 2000){ // If waiting time > 2 seconds
+
+    // Stop the robot
     MotorCommand no_command;
     motorL.writeMicroseconds(no_command.motorL);
     motorR.writeMicroseconds(no_command.motorR);
-    // servo.write(no_commands.servo);
     }
   }
 }

@@ -110,6 +110,8 @@ void setup(){
   servo.write(90); // Camera looking forward
 }
 
+unsigned long last_command_send = millis();
+
 void loop(){
   MotorCommand commands;
   if (Serial1.available()){
@@ -117,8 +119,11 @@ void loop(){
     ParsedInput error = processReceivedData(message);
     commands = computeCommand(error);
   }
+  
+  if (millis() - last_command_send >= 500){
   motorL.writeMicroseconds(commands.motorL);
   motorR.writeMicroseconds(commands.motorR);
   servo.write(commands.servo);
-  delay(500);
+  last_command_send = millis();
+  }
 }

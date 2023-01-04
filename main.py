@@ -135,7 +135,7 @@ try:
 
             if time.time() - last_command_time > 0.5:
                 # LEADER
-                if status == 1:
+                if status == 1 and success_ball:
                     # Retrieving deviation and radius
                     deviation = ball_tracker.get_deviation(image, target)
                     radius = target[-1]

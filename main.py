@@ -152,16 +152,18 @@ try:
                     # Convert BRG image to GRAY image
                     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-                    # Trying to detect the ball
+                    # Trying to detect the aruco
                     success, *_ = aruco_detector.detection(gray)
 
                     if success:
+                        print("I see the aruco")
                         heading_error, distance_error = aruco_detector.get_deviation()
                         heading_error /= 25
                         distance_error /= 10
                         servo = 0
                     # If the aruco is not detected
                     else:
+                        print("I don't see the aruco")
                         distance_error = 0
                         heading_error = -0.5  # Turn right
                         servo = 0

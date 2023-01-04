@@ -100,7 +100,7 @@ client.publish("Chenille-based-learning/Server/population", i + 1, qos=2, retain
 # 0: follower 
 # 1:leader
 
-client.publish(f"Chenille-based-learning/Robots/{name_robot}/status", status, qos=1)
+client.publish(f"Chenille-based-learning/Robots/{name_robot}/status", status, qos=2)
 
 """
     MAIN LOOP

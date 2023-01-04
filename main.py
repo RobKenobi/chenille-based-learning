@@ -180,6 +180,7 @@ try:
 except KeyboardInterrupt:
     # Closing communication
     print("Disconnecting from the broker ...")
+    client.publish(f"Chenille-based-learning/Robots/{name_robot}/BallRadius", 0, qos=1)
     client.disconnect()
     client.loop_stop()
 

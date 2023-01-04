@@ -98,17 +98,14 @@ last_command_time = time.time()
 
 try:
     while True:
-        #
-        k = cv2.waitKey(1)
-
         # Press <ESC> to exit the program
-        if k == 27:
+        if cv2.waitKey(1) == 27:
             raise KeyboardInterrupt
 
         # Reading image from camera
-        _, image = cap.read()
+        image_received, image = cap.read()
 
-        if image is not None:
+        if image_received:
             # Flipping image
             image = cv2.flip(image, -1)
 
@@ -119,6 +116,7 @@ try:
             success_ball, target = ball_detector.detect_ball(image)
 
             if not success_ball:
+                print("I don't see the ball")
                 target = [0, 0, 0]
                 heading_error = 0
                 distance_error = 0
@@ -131,7 +129,7 @@ try:
             if status == -1:
                 # Robot is not allowed to move
                 print("Waiting for new status")
-                # cv2.imshow("Image", image)
+                cv2.imshow("Image", image)
                 time.sleep(0.5)
                 continue
 
@@ -177,9 +175,7 @@ try:
                 serialArduino.write(message_to_send.encode())
                 last_time = time.time()
 
-            # cv2.imshow("Image", image)
-
-
+            cv2.imshow("Image", image)
 
 except KeyboardInterrupt:
     # Closing communication

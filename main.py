@@ -3,7 +3,7 @@ import argparse
 
 import cv2
 import paho.mqtt.client as mqtt
-import serial
+# import serial
 
 from modules.aruco import ArucoDetector
 from modules.ball_detection import BallDetector
@@ -14,7 +14,7 @@ from modules.ball_tracking import BallTracker
 """
 
 parser = argparse.ArgumentParser(description='Get the robot ID')
-parser.add_argument("robot_id")
+parser.add_argument("robot_id", choices=["Robot1", "Robot2"])
 # Parse passed arguments
 args = parser.parse_args()
 # Retrieve robot ID

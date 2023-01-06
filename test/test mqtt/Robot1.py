@@ -44,7 +44,7 @@ client.publish(f"Chenille-based-learning/Robots/{name_robot}/status", status, qo
 
 try:
     while True:
-        target = random.randint(1000, 2000)  # Radius of ball
+        target = 10
 
         client.publish(f"Chenille-based-learning/Robots/{name_robot}/BallRadius", target, qos=1)
 

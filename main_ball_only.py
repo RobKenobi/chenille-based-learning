@@ -54,8 +54,8 @@ while True:
 
                 target_radius = 70  # The robot should be approximately at 20 cm of the ball
 
-                heading_error = - deviation[0] / 200
-                distance_error = (target_radius - radius) / 60  # (70-10)/60 = 1 rad/s is the maximum longitudinal speed
+                heading_error = - deviation[0] / 175
+                distance_error = (target_radius - radius) / 70
                 servo = 0
 
                 message = f"Distance error : {distance_error}\nHeading error : {heading_error}\nServo : {servo}"

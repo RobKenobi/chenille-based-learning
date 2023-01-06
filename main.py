@@ -1,4 +1,5 @@
 import time
+import argparse
 
 import cv2
 import paho.mqtt.client as mqtt
@@ -7,6 +8,18 @@ import serial
 from modules.aruco import ArucoDetector
 from modules.ball_detection import BallDetector
 from modules.ball_tracking import BallTracker
+
+"""
+    RETRIEVE ROBOT ID
+"""
+
+parser = argparse.ArgumentParser(description='Get the robot ID')
+parser.add_argument("robot_id")
+# Parse passed arguments
+args = parser.parse_args()
+# Retrieve robot ID
+name_robot = args.robot_id
+
 
 """
     ARDUINO - RASPBERRY COMMUNICATION
@@ -68,7 +81,6 @@ def on_connect(client, userdata, flags, rc):
 broker = "broker.hivemq.com"
 broker_port = 1883
 
-name_robot = "Robot1"
 client = mqtt.Client(name_robot, clean_session=True)
 
 # Callbacks

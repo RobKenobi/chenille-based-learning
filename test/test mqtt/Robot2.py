@@ -44,7 +44,7 @@ client.publish(f"Chenille-based-learning/Robots/{name_robot}/status", status, qo
 
 try:
     while True:
-        target = 2
+        target = 1000
 
         client.publish(f"Chenille-based-learning/Robots/{name_robot}/BallRadius", target, qos=1)
 
